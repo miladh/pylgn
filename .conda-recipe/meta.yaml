@@ -1,0 +1,46 @@
+package:
+  name: pylgn
+  version: {{ environ.get("GIT_TAG", "0.0.0_custom")|replace("v", "")|replace("-", "_") }}
+
+source:
+  path: ..
+ 
+build:
+  script: python setup.py install
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - numpy
+    - matplotlib
+    - quantities
+    - h5py
+    - pytest
+    - exdir
+
+  run:
+    - python
+    - setuptools
+    - numpy
+    - matplotlib
+    - scipy
+    - quantities
+    - h5py
+    - pytest
+    - exdir
+
+test:
+  source_files:
+    - pylgn/tests
+  requires:
+    - pytest
+  imports:
+    - pylgn
+  commands:
+    - pytest -s
+
+about:
+  home: https://github.com/miladh/pylgn/
+  license: GPLv3
+  license_file: LICENSE

@@ -1,6 +1,6 @@
 channels:
   - conda-forge
-  - cinpla/label/dev
+  - cinpla
 dependencies:
   - pylgn
   - python=3.5

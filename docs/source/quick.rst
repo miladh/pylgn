@@ -10,7 +10,7 @@ Install
 With `Anaconda <http://continuum.io/downloads>`_ or 
 `Miniconda <http://conda.pydata.org/miniconda.html>`_::
 
-    conda install -c defaults -c conda-forge -c cinpla/label/dev pylgn
+    conda install -c defaults -c conda-forge -c cinpla pylgn
     
 
 Minimal example

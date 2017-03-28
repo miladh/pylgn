@@ -9,6 +9,8 @@ install:
 script:
   - source libs/travis-conda-scripts/scripts/config.sh
   - bash -ex libs/travis-conda-scripts/scripts/build.sh
+  - bash -ex libs/travis-conda-scripts/scripts/install_package.sh pylgn
+  - bash -ex libs/travis-conda-scripts/scripts/doctest.sh
   
 deploy:
   - provider: script

@@ -22,8 +22,7 @@ A full-field grating stimulus is used.
 
 The complete code and a step-by-step explanation is given below:
 
-.. code-block:: python
-
+.. testcode::
 
           import pylgn
           import pylgn.kernels.spatial as spl
@@ -55,17 +54,17 @@ The complete code and a step-by-step explanation is given below:
           network.set_stimulus(stimulus)
           
           # compute
-          network.compute_irf(relay)
           network.compute_response(relay)
 
           # visulize
           pylgn.plot.animate_cube(relay.response, title="Relay cell response")
 
+        
 Create network
 ''''''''''''''
 First step is to create a network:
 
-.. code-block:: python
+.. testcode::
 
 
           import pylgn
@@ -81,7 +80,7 @@ Next we create an integrator with :math:`2^{nt}` and :math:`2^{ns}` spatial and 
 
 
 
-.. code-block:: python
+.. testcode::
 
           integrator = network.create_integrator(nt=5, nr=7, dt=1, dr=0.1)
 
@@ -92,7 +91,7 @@ Cells can be added to the network using :code:`create_*` methods.
 For ganglion cell the impulse-response function can be given as a argument.
 Default is a spatial DoG function and a temporal delta function. 
 
-.. code-block:: python
+.. testcode::
 
           ganglion = network.create_ganglion_cell()
           relay = network.create_relay_cell()
@@ -100,7 +99,7 @@ Default is a spatial DoG function and a temporal delta function.
 .. note::
   The various neuron attributes are stored in a dictionary on the neuron objects:
 
-  .. code-block:: python
+.. doctest::
 
           >>> print(ganglion.params)
           {'background_response': array(0.0) * 1/s, 'kernel': {'spatial': {'center': {'params': {'A': 1, 'a': array(0.62) * deg}, 'type': 'create_gauss_ft'}, 'surround': {'params': {'A': 0.85, 'a': array(1.26) * deg}, 'type': 'create_gauss_ft'}, 'type': 'create_dog_ft'}, 'temporal': {'params': {'delay': array(0.0) * ms}, 'type': 'create_delta_ft'}}}
@@ -119,7 +118,7 @@ We use a separable kernel between the ganglion and relay cells.
 The :py:meth:`~pylgn.core.Network.connect` method has the following signature: :code:`connect(source, target, kernel, weight)` where source and target are the source and target neurons, respectively. Kernel is the connectivity kernel and weight is the connection weight (default is 1).
 If a separable kernel is used a tuple consisting of the spatial and temporal part is given as kernel.
 
-.. code-block:: python
+.. testcode::
 
           Krg_r = spl.create_gauss_ft()
           Krg_t = tpl.create_delta_ft()
@@ -129,7 +128,7 @@ If a separable kernel is used a tuple consisting of the spatial and temporal par
 .. note::
     The kernel parameters can be received using:
 
-    .. code-block:: python
+    .. doctest::
 
             >>> print(pylgn.closure_params(Krg_r))
             {'params': {'A': 1, 'a': array(0.62) * deg}, 'type': 'create_gauss_ft'}
@@ -142,9 +141,9 @@ If you want to use the analytical expression for the Fourier transform of the gr
 In this case we just take some values from the existing values.
 
 
-.. code-block:: python
+.. testcode::
 
-          k_g = integrator.spatial_freqs[2]
+          k_g = integrator.spatial_freqs[3]
           w_g = -integrator.temporal_freqs[1]
           stimulus = pylgn.stimulus.create_fullfield_grating_ft(angular_freq=w_g,
                                                                 wavenumber=k_g,
@@ -160,7 +159,7 @@ Compute response
 ''''''''''''''''
 The lines below computes the response of the relay cells and animate their activity over time:
 
-.. code-block:: python
+.. testcode::
 
           network.compute_response(relay)
           pylgn.plot.animate_cube(relay.response)

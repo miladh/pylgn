@@ -1,5 +1,5 @@
 .. _quick:
-.. include core.rst
+
 
 Getting Started
 ===============

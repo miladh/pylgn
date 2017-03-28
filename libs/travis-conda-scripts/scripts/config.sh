@@ -11,7 +11,7 @@ export GIT_STRING=${GIT_TAG}
 if [ -z $TRAVIS_TAG ]; then
     echo "INFO: No TRAVIS_TAG found, adding dev channel"
     export EXTRA_CONDA_CHANNELS="$EXTRA_CONDA_CHANNELS -c cinpla/label/dev"
-    export GIT_STRING="${GIT_TAG}_dev"
+    export GIT_STRING="${GIT_TAG}_latest"
 fi
 echo PATH $PATH
 echo GIT_DESCRIBE $GIT_DESCRIBE

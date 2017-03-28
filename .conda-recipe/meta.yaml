@@ -16,7 +16,6 @@ requirements:
     - matplotlib
     - quantities
     - h5py
-    - pytest
     - exdir
 
   run:
@@ -27,18 +26,22 @@ requirements:
     - scipy
     - quantities
     - h5py
-    - pytest
     - exdir
+    
 
 test:
   source_files:
     - pylgn/tests
+    - docs
+    - examples
   requires:
     - pytest
+    - sphinx
   imports:
     - pylgn
   commands:
     - pytest -s
+    - cd docs ; make doctest
 
 about:
   home: https://github.com/miladh/pylgn/

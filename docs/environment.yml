@@ -1,6 +1,0 @@
-channels:
-  - conda-forge
-  - cinpla
-dependencies:
-  - pylgn
-  - python=3.5

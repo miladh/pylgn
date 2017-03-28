@@ -22,7 +22,7 @@ A full-field grating stimulus is used.
 
 The complete code and a step-by-step explanation is given below:
 
-.. testcode::
+.. code-block:: python
 
           import pylgn
           import pylgn.kernels.spatial as spl
@@ -99,7 +99,7 @@ Default is a spatial DoG function and a temporal delta function.
 .. note::
   The various neuron attributes are stored in a dictionary on the neuron objects:
 
-.. doctest::
+.. code-block:: python
 
           >>> print(ganglion.params)
           {'background_response': array(0.0) * 1/s, 'kernel': {'spatial': {'center': {'params': {'A': 1, 'a': array(0.62) * deg}, 'type': 'create_gauss_ft'}, 'surround': {'params': {'A': 0.85, 'a': array(1.26) * deg}, 'type': 'create_gauss_ft'}, 'type': 'create_dog_ft'}, 'temporal': {'params': {'delay': array(0.0) * ms}, 'type': 'create_delta_ft'}}}
@@ -128,7 +128,7 @@ If a separable kernel is used a tuple consisting of the spatial and temporal par
 .. note::
     The kernel parameters can be received using:
 
-    .. doctest::
+    .. code-block:: python
 
             >>> print(pylgn.closure_params(Krg_r))
             {'params': {'A': 1, 'a': array(0.62) * deg}, 'type': 'create_gauss_ft'}
@@ -159,7 +159,7 @@ Compute response
 ''''''''''''''''
 The lines below computes the response of the relay cells and animate their activity over time:
 
-.. testcode::
+.. code-block:: python
 
           network.compute_response(relay)
           pylgn.plot.animate_cube(relay.response)

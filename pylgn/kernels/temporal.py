@@ -121,7 +121,7 @@ def create_biphasic(phase_duration, damping_factor, delay):
     return evaluate
 
 
-def create_biphasic_ft(phase_duration, damping_factor, delay):
+def create_biphasic_ft(phase_duration, damping_factor, delay=0*pq.ms):
     """
     Create Fourier transformed Biphasic closure
 
@@ -157,7 +157,7 @@ def create_biphasic_ft(phase_duration, damping_factor, delay):
         term1 = 1. + (1. - damping_factor) * exp_term
         term2 = damping_factor * np.exp(1j * phase_duration * 2.*w)
         
-        factor *= factor.units if isinstance(factor, pq.Quantity) else 1  # TODO: hack
+        factor *= 1./factor.units if isinstance(factor, pq.Quantity) else 1  # TODO: hack
         return factor * np.exp(1j * delay * w) * (term1 - term2)
         
     return evaluate

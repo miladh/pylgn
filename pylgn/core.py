@@ -428,7 +428,8 @@ class Network:
 
         neuron.response_ft = np.multiply(neuron.irf_ft, self.stimulus["ft"])
 
-        if neuron.background_response is not 0:
+        # TODO: fix units
+        if neuron.background_response.magnitude != 0:
             neuron.response_ft[0, 0, 0] += 8*np.pi**3 / self.integrator.dk**2 / self.integrator.dw * neuron.background_response.rescale(1/pq.s).magnitude
 
     def compute_irf(self, neuron, recompute_ft=False):

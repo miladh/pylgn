@@ -116,30 +116,3 @@ def test_minimal():
 
     # visulize
     # pylgn.plot.animate_cube(relay.response, title="Relay cell response")
-
-    # write
-    filename = "/tmp/pylgn_test"
-    import shutil
-    import os
-
-    try:
-        shutil.rmtree(filename+".exdir")
-    except OSError:
-        pass
-
-    try:
-        os.remove(filename+".hdf5")
-        print("removing file....")
-    except OSError:
-        pass
-
-    io = pylgn.io.ExdirIO(filename=filename+".exdir")
-    io.write_network(network)
-
-    io = pylgn.io.Hdf5IO(filename=filename+".hdf5")
-    io.write_network(network)
-
-
-# if __name__ == "__main__":
-#     path = "/home/milad/Dropbox/projects/lgn/code/stimuli/tarzan.avi"
-#     pylgn.stimulus.create_natural_movie(path)

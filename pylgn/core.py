@@ -107,7 +107,6 @@ class Integrator:
         self._w_vec = np.fft.fftfreq(self.Nt, self.dt) * -2 * np.pi
         self._k_vec = np.fft.fftfreq(self.Nr, self.dr) * 2 * np.pi
 
-        # TODO check these factors
         self._fft_factor = self.dt.magnitude * self.dr.magnitude**2
         self._ifft_factor = 1. / self._fft_factor
 

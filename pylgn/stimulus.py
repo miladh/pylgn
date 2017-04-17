@@ -76,12 +76,13 @@ def create_fullfield_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
         _check_valid_temporal_freq(w, w_g)
 
         dw = abs(w.flatten()[1] - w.flatten()[0]) if isinstance(w, np.ndarray) and w.ndim > 0 else 1*pq.Hz
-        dk = abs(kx.flatten()[1] - kx.flatten()[0]) if isinstance(kx, np.ndarray) and kx.ndim > 0 else 1/pq.deg
+        dkx = abs(kx.flatten()[1] - kx.flatten()[0]) if isinstance(kx, np.ndarray) and kx.ndim > 0 else 1/pq.deg
+        dky = abs(ky.flatten()[1] - ky.flatten()[0]) if isinstance(ky, np.ndarray) and ky.ndim > 0 else 1/pq.deg
 
         g_1 = kronecker_delta(kx, kx_g) * kronecker_delta(ky, ky_g) * kronecker_delta(w, w_g)
         g_2 = kronecker_delta(kx, -kx_g) * kronecker_delta(ky, -ky_g) * kronecker_delta(w, -w_g)
 
-        return 4 * np.pi**3 * contrast * (g_1 + g_2) / dw / dk**2
+        return 4 * np.pi**3 * contrast * (g_1 + g_2) / dw / dkx / dky
 
     return evaluate
 

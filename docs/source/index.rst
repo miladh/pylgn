@@ -10,7 +10,7 @@ pylgn is a visual stimulus-driven simulator of spatiotemporal cell responses in 
 .. toctree::
    :maxdepth: 1
    :hidden:
-   
+
    installation
    quick
    examples
@@ -18,6 +18,7 @@ pylgn is a visual stimulus-driven simulator of spatiotemporal cell responses in 
    neurons
    integrator
    kernels
+   stimulus
 
 Where to start
 --------------
@@ -29,9 +30,9 @@ Examples
   * :ref:`einevoll_2000`.
   * :ref:`einevoll_2005`.
   * :ref:`einevoll_2012`.
-   
-   
-   
+
+
+
 API reference
 -------------
 
@@ -39,10 +40,7 @@ API reference
   * :ref:`neurons`
   * :ref:`integrator`
   * :ref:`kernels`
- 
- 
+  * :ref:`stimulus`
+
+
 .. currentmodule:: pylgn
-
-
-
- 

@@ -10,8 +10,8 @@ import pylgn.kernels.temporal as tpl
 fb_weights = [0, -1.5] 
 
 # diameters
-mask_size = np.linspace(0, 6, 50) * pq.deg 
-response = np.zeros([len(mask_size), len(fb_weights)]) / pq.s
+patch_diameter = np.linspace(0, 6, 50) * pq.deg 
+response = np.zeros([len(patch_diameter), len(fb_weights)]) / pq.s
  
 for j, w_c in enumerate(fb_weights):
     # create network
@@ -36,10 +36,10 @@ for j, w_c in enumerate(fb_weights):
     network.connect(cortical, relay, (Krc_r, delta_t), w_c)
     network.connect(relay, cortical, (delta_s, delta_t), 1.0)
 
-    for i, d in enumerate(mask_size):
+    for i, d in enumerate(patch_diameter):
         # create stimulus
         stimulus = pylgn.stimulus.create_patch_grating_ft(wavenumber=0,
-                                                          mask_size=d)
+                                                          patch_diameter=d)
         network.set_stimulus(stimulus)
 
         # compute
@@ -51,8 +51,8 @@ for j, w_c in enumerate(fb_weights):
     network.clear()
 
 # visualize
-plt.plot(mask_size, response[:, 0], '-o', label="FB weight={}".format(fb_weights[0]))
-plt.plot(mask_size, response[:, 1], '-o', label="FB weight={}".format(fb_weights[1]))
+plt.plot(patch_diameter, response[:, 0], '-o', label="FB weight={}".format(fb_weights[0]))
+plt.plot(patch_diameter, response[:, 1], '-o', label="FB weight={}".format(fb_weights[1]))
 plt.xlabel("Diameter (deg)")
 plt.ylabel("Response (1/s)")
 plt.legend()

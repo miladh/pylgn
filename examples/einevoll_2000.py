@@ -8,9 +8,9 @@ import pylgn.kernels.spatial as spl
 import pylgn.kernels.temporal as tpl
 
     
-mask_size = np.linspace(0, 14, 50) * pq.deg 
-R_g = np.zeros(len(mask_size)) / pq.s
-R_r = np.zeros(len(mask_size)) / pq.s
+patch_diameter = np.linspace(0, 14, 50) * pq.deg 
+R_g = np.zeros(len(patch_diameter)) / pq.s
+R_r = np.zeros(len(patch_diameter)) / pq.s
 
 # create network
 network = pylgn.Network()
@@ -32,9 +32,9 @@ ganglion.set_kernel((Wg_r, tpl.create_delta_ft()))
 network.connect(ganglion, relay, (Krg_r, tpl.create_delta_ft()), weight=0.81)
 network.connect(ganglion, relay, (Krig_r, tpl.create_delta_ft()), weight=-0.56)
 
-for i, d in enumerate(mask_size):
+for i, d in enumerate(patch_diameter):
     # create stimulus
-    stimulus = pylgn.stimulus.create_patch_grating_ft(mask_size=d, contrast=-131.3)
+    stimulus = pylgn.stimulus.create_patch_grating_ft(patch_diameter=d, contrast=-131.3)
     network.set_stimulus(stimulus)
 
     # compute
@@ -45,8 +45,8 @@ for i, d in enumerate(mask_size):
     R_r[i] = relay.center_response[0] 
 
 # visualize
-plt.plot(mask_size, R_g, '-o', label="Ganglion")
-plt.plot(mask_size, R_r, '-o', label="Relay")
+plt.plot(patch_diameter, R_g, '-o', label="Ganglion")
+plt.plot(patch_diameter, R_r, '-o', label="Relay")
 plt.xlabel("Spot diameter (deg)")
 plt.ylabel("Response (spikes/s)")
 plt.legend()

@@ -409,6 +409,7 @@ class Network:
         neuron.irf_ft_is_computed = True
         w_vec, kx_vec, ky_vec = self.integrator.freq_meshgrid()
         neuron.irf_ft = neuron.evaluate_irf_ft(w_vec, kx_vec, ky_vec)
+        print(neuron.irf_ft.units)
 
     def compute_response_ft(self, neuron, recompute_irf_ft=False):
         """

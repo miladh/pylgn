@@ -82,7 +82,7 @@ def create_fullfield_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
         g_1 = kronecker_delta(kx, kx_g) * kronecker_delta(ky, ky_g) * kronecker_delta(w, w_g)
         g_2 = kronecker_delta(kx, -kx_g) * kronecker_delta(ky, -ky_g) * kronecker_delta(w, -w_g)
 
-        return 4 * np.pi**3 * contrast * (g_1 + g_2) / dw / dkx / dky
+        return 4 * np.pi**3 * contrast * (g_1 + g_2) / dw.magnitude / dkx.magnitude / dky.magnitude
 
     return evaluate
 
@@ -121,7 +121,7 @@ def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
         term_1 = np.where(arg_1 == 0, 1, 2 * first_kind_bessel(arg_1) / arg_1)
         term_2 = np.where(arg_2 == 0, 1, 2 * first_kind_bessel(arg_2) / arg_2)
 
-        return factor * (term_1*kronecker_delta(w, w_g) + term_2*kronecker_delta(w, -w_g))
+        return factor.magnitude * (term_1*kronecker_delta(w, w_g) + term_2*kronecker_delta(w, -w_g))
 
     return evaluate
 

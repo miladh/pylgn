@@ -53,7 +53,7 @@ def test_core():
     stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=w_g,
                                                       wavenumber=k_g,
                                                       orient=0.0,
-                                                      mask_size=3,
+                                                      patch_diameter=3,
                                                       contrast=4)
     network.set_stimulus(stimulus)
 

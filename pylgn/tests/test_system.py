@@ -38,11 +38,11 @@ def X(y, z, n):
 @pytest.mark.parametrize("k_id", [0])
 @pytest.mark.parametrize("orient", [0, 90]*pq.deg)
 @pytest.mark.parametrize("C", [-56.3])
-@pytest.mark.parametrize("mask_size", [1, 5, 10]*pq.deg)
+@pytest.mark.parametrize("patch_diameter", [1, 5, 10]*pq.deg)
 @pytest.mark.parametrize("n", [4])
 def test_G_patch_grating_response(nt, nr, dt, dr,
                                   A_g, a_g, B_g, b_g, delay_g,
-                                  w_id, k_id, orient, C, mask_size,
+                                  w_id, k_id, orient, C, patch_diameter,
                                   n):
     network = pylgn.Network()
     integrator = network.create_integrator(nt=nt, nr=nr, dt=dt, dr=dr)
@@ -59,11 +59,11 @@ def test_G_patch_grating_response(nt, nr, dt, dr,
                                                       wavenumber=k_g,
                                                       orient=orient,
                                                       contrast=C,
-                                                      mask_size=mask_size)
+                                                      patch_diameter=patch_diameter)
     network.set_stimulus(stimulus)
     network.compute_response(ganglion)
 
-    Rg = C * (X(a_g/mask_size, a_g*k_g, n) - B_g/A_g * X(b_g/mask_size, b_g*k_g, n)) / pq.s
+    Rg = C * (X(a_g/patch_diameter, a_g*k_g, n) - B_g/A_g * X(b_g/patch_diameter, b_g*k_g, n)) / pq.s
     assert abs(Rg - ganglion.center_response[0]) < complex(1e-10, 1e-10)
 
 

@@ -17,8 +17,8 @@ def test_edog_patch_grating_response():
                            [0.5039615741, 0.2843698815]]) / pq.s
     fb_weights = [0, -1.5] 
 
-    mask_size = np.linspace(0, 6, 5) * pq.deg 
-    response = np.zeros([len(mask_size), len(fb_weights)]) / pq.s
+    patch_diameter = np.linspace(0, 6, 5) * pq.deg 
+    response = np.zeros([len(patch_diameter), len(fb_weights)]) / pq.s
      
     for j, w_c in enumerate(fb_weights):
         network = pylgn.Network()
@@ -37,8 +37,8 @@ def test_edog_patch_grating_response():
         network.connect(cortical, relay, (Krc_r, delta_t), w_c)
         network.connect(relay, cortical, (delta_s, delta_t), 1.0)
 
-        for i, d in enumerate(mask_size):
-            stimulus = pylgn.stimulus.create_patch_grating_ft(wavenumber=integrator.spatial_freqs[4], mask_size=d)
+        for i, d in enumerate(patch_diameter):
+            stimulus = pylgn.stimulus.create_patch_grating_ft(wavenumber=integrator.spatial_freqs[4], patch_diameter=d)
             network.set_stimulus(stimulus)
             network.compute_response(relay, recompute_ft=True)
             response[i, j] = relay.center_response[0] 
@@ -57,8 +57,8 @@ def test_edog_spot_response():
                            [0.1500017999, 0.0601939846]]) / pq.s
     fb_weights = [0, -1.5] 
 
-    mask_size = np.linspace(0, 6, 5) * pq.deg 
-    response = np.zeros([len(mask_size), len(fb_weights)]) / pq.s
+    patch_diameter = np.linspace(0, 6, 5) * pq.deg 
+    response = np.zeros([len(patch_diameter), len(fb_weights)]) / pq.s
      
     for j, w_c in enumerate(fb_weights):
         network = pylgn.Network()
@@ -77,9 +77,9 @@ def test_edog_spot_response():
         network.connect(cortical, relay, (Krc_r, delta_t), w_c)
         network.connect(relay, cortical, (delta_s, delta_t), 1.0)
 
-        for i, d in enumerate(mask_size):
+        for i, d in enumerate(patch_diameter):
             stimulus = pylgn.stimulus.create_patch_grating_ft(wavenumber=0./pq.deg,
-                                                              mask_size=d)
+                                                              patch_diameter=d)
             network.set_stimulus(stimulus)
             network.compute_response(relay, recompute_ft=True)
             response[i, j] = relay.center_response[0] 
@@ -102,8 +102,8 @@ def test_dog_patch_grating_response():
 
     k_max_id = 40
     step = 5
-    mask_size = np.array([3, 1.5, 0.85, 0.3]) * pq.deg
-    response = np.zeros([int(k_max_id/step), len(mask_size)]) / pq.s
+    patch_diameter = np.array([3, 1.5, 0.85, 0.3]) * pq.deg
+    response = np.zeros([int(k_max_id/step), len(patch_diameter)]) / pq.s
      
     network = pylgn.Network()
 
@@ -115,10 +115,10 @@ def test_dog_patch_grating_response():
 
     ganglion = network.create_ganglion_cell(kernel=(Wg_r, Wg_t))
 
-    for j, d in enumerate(mask_size):
+    for j, d in enumerate(patch_diameter):
         for i, k_d in enumerate(spatial_freqs):
             stimulus = pylgn.stimulus.create_patch_grating_ft(wavenumber=k_d,
-                                                              mask_size=d)
+                                                              patch_diameter=d)
             network.set_stimulus(stimulus)
 
             network.compute_response(ganglion, recompute_ft=True)
@@ -133,9 +133,9 @@ def test_nonlagged_x_cells():
     
     R_r_e = np.array([9.1000000000, 48.9839667670, 20.1915848052, 11.3884937007, 13.2064761119, 13.9269478889, 14.0176607852, 14.0235290468, 14.0237452461, 14.0237499389])/pq.s
     
-    mask_size = np.linspace(0, 14, 10) * pq.deg 
-    R_g = np.zeros(len(mask_size)) / pq.s
-    R_r = np.zeros(len(mask_size)) / pq.s
+    patch_diameter = np.linspace(0, 14, 10) * pq.deg 
+    R_g = np.zeros(len(patch_diameter)) / pq.s
+    R_r = np.zeros(len(patch_diameter)) / pq.s
 
     network = pylgn.Network()
     integrator = network.create_integrator(nt=1, nr=8, dt=1*pq.ms, dr=0.1*pq.deg)
@@ -150,8 +150,8 @@ def test_nonlagged_x_cells():
     network.connect(ganglion, relay, (Krg_r, tpl.create_delta_ft()), weight=0.81)
     network.connect(ganglion, relay, (Krig_r, tpl.create_delta_ft()), weight=-0.56)
 
-    for i, d in enumerate(mask_size):
-        stimulus = pylgn.stimulus.create_patch_grating_ft(mask_size=d, contrast=-131.3)
+    for i, d in enumerate(patch_diameter):
+        stimulus = pylgn.stimulus.create_patch_grating_ft(patch_diameter=d, contrast=-131.3)
         network.set_stimulus(stimulus)
 
         network.compute_response(ganglion, recompute_ft=True)

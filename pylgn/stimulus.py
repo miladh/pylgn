@@ -54,21 +54,99 @@ def _convert_to_cartesian(angular_freq, wavenumber, orient):
 def create_fullfield_grating(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
                              orient=0*pq.deg, contrast=1):
     """
-    Full-field grating
+    Create full-field grating
+
+
+    Parameters
+    ----------
+    angular_freq : float
+        Angular frequency (positive number)
+    wavenumber : float/quantity scalar
+        Wavenumber (positive number)
+    orient : float/quantity scalar
+        Orientation
+    contrast : float
+        Contrast value
+
+
+    Returns
+    -------
+    out : function
+        Evaluate function
+
+
+    Notes
+    -----
+    Both angular_freq and wavenumber are positive numbers.
+    Use orientation to specify desired direction.
     """
     w_g, kx_g, ky_g = _convert_to_cartesian(angular_freq, wavenumber, orient)
 
     def evaluate(t, x, y):
+        """
+        Evaluates full-field grating
+
+        Parameters
+        ----------
+        t : float/quantity scalar
+        x : float/quantity scalar
+        y : float/quantity scalar
+
+        Returns
+        -------
+        out : ndarray
+            Calculated values
+        """
         return contrast * np.cos(kx_g * x + ky_g * y - w_g * t)
     return evaluate
 
 
 def create_fullfield_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
                                 orient=0*pq.deg, contrast=1):
+    """
+    Create Fourier transformed full-field grating
 
+    Parameters
+    ----------
+    angular_freq : float
+        Angular frequency (positive number)
+    wavenumber : float/quantity scalar
+        Wavenumber (positive number)
+    orient : float/quantity scalar
+        Orientation
+    contrast : float
+        Contrast value
+
+
+    Returns
+    -------
+    out : function
+        Evaluate function
+
+    Notes
+    -----
+    Both angular_freq and wavenumber are positive numbers.
+    Use orientation to specify desired direction.
+    The combination of angular_freq, wavenumber, and orient should
+    give w, kx, and ky that exist in function arguments in evaluate function.
+    """
     w_g, kx_g, ky_g = _convert_to_cartesian(angular_freq, wavenumber, orient)
 
     def evaluate(w, kx, ky):
+        """
+        Evaluates Fourier transformed full-field grating
+
+        Parameters
+        ----------
+        w : float/quantity scalar
+        kx : float/quantity scalar
+        ky : float/quantity scalar
+
+        Returns
+        -------
+        out : ndarray
+            Calculated values
+        """
         _check_valid_spatial_freq(kx, ky, kx_g, ky_g)
         _check_valid_temporal_freq(w, w_g)
 
@@ -85,35 +163,120 @@ def create_fullfield_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
 
 
 def create_patch_grating(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
-                         orient=0*pq.deg, contrast=1, mask_size=1*pq.deg):
+                         orient=0*pq.deg, contrast=1, patch_diameter=1*pq.deg):
+    """
+    Create patch grating
+
+    Parameters
+    ----------
+    angular_freq : float
+        Angular frequency (positive number)
+    wavenumber : float/quantity scalar
+        Wavenumber (positive number)
+    orient : float/quantity scalar
+        Orientation
+    contrast : float
+        Contrast value
+    patch_diameter : float/quantity scalar
+        Patch size
+
+
+    Returns
+    -------
+    out : function
+        Evaluate function
+
+
+    Notes
+    -----
+    Both angular_freq and wavenumber are positive numbers.
+    Use orientation to specify desired direction.
+    """
     # TODO: write test
     w_g, kx_g, ky_g = _convert_to_cartesian(angular_freq, wavenumber, orient)
-    mask_size = mask_size if isinstance(mask_size, pq.Quantity) else mask_size * pq.deg
+    patch_diameter = patch_diameter if isinstance(patch_diameter, pq.Quantity) else patch_diameter * pq.deg
 
     def evaluate(t, x, y):
+        """
+        Evaluates patch grating function
+
+        Parameters
+        ----------
+        w : float/quantity scalar
+        kx : float/quantity scalar
+        ky : float/quantity scalar
+
+        Returns
+        -------
+        out : ndarray
+            Calculated values
+        """
         r = np.sqrt(x**2 + y**2)
-        return contrast * np.cos(kx_g*x + ky_g*y - w_g*t) * (1 - heaviside(r - mask_size*0.5))
+        return contrast * np.cos(kx_g*x + ky_g*y - w_g*t) * (1 - heaviside(r - patch_diameter*0.5))
 
     return evaluate
 
 
 def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
-                            orient=0*pq.deg, contrast=1, mask_size=1*pq.deg):
+                            orient=0*pq.deg, contrast=1, patch_diameter=1*pq.deg):
+    """
+    Create Fourier transformed patch grating
+
+    Parameters
+    ----------
+    angular_freq : float
+        Angular frequency (positive number)
+    wavenumber : float/quantity scalar
+        Wavenumber (positive number)
+    orient : float/quantity scalar
+        Orientation
+    contrast : float
+        Contrast value
+    patch_diameter : float/quantity scalar
+        Patch size
+
+
+    Returns
+    -------
+    out : function
+        Evaluate function
+
+    Notes
+    -----
+    Both angular_freq and wavenumber are positive numbers.
+    Use orientation to specify desired direction.
+    The combination of angular_freq, wavenumber, and orient should
+    give w, kx, and ky that exist in function arguments in evaluate function.
+    """
     # TODO: write test
     w_g, kx_g, ky_g = _convert_to_cartesian(angular_freq, wavenumber, orient)
-    mask_size = mask_size if isinstance(mask_size, pq.Quantity) else mask_size * pq.deg
+    patch_diameter = patch_diameter if isinstance(patch_diameter, pq.Quantity) else patch_diameter * pq.deg
 
     def evaluate(w, kx, ky):
+        """
+        Evaluates Fourier transformed patch grating function
+
+        Parameters
+        ----------
+        w : float/quantity scalar
+        kx : float/quantity scalar
+        ky : float/quantity scalar
+
+        Returns
+        -------
+        out : ndarray
+            Calculated values
+        """
         _check_valid_spatial_freq(kx, ky, kx_g, ky_g)
         _check_valid_temporal_freq(w, w_g)
 
         dw = abs(w.flatten()[1] - w.flatten()[0]) if isinstance(w, np.ndarray) and w.ndim > 0 else 1*pq.Hz
 
-        factor = contrast * np.pi**2 * mask_size**2 / dw / 4
+        factor = contrast * np.pi**2 * patch_diameter**2 / dw / 4
         dk_1 = np.sqrt((kx - kx_g)**2 + (ky - ky_g)**2)
         dk_2 = np.sqrt((kx + kx_g)**2 + (ky + ky_g)**2)
-        arg_1 = dk_1 * mask_size * 0.5
-        arg_2 = dk_2 * mask_size * 0.5
+        arg_1 = dk_1 * patch_diameter * 0.5
+        arg_2 = dk_2 * patch_diameter * 0.5
 
         term_1 = np.where(arg_1 == 0, 1, 2 * first_kind_bessel(arg_1) / arg_1)
         term_2 = np.where(arg_2 == 0, 1, 2 * first_kind_bessel(arg_2) / arg_2)
@@ -121,23 +284,3 @@ def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
         return factor.magnitude * (term_1*kronecker_delta(w, w_g) + term_2*kronecker_delta(w, -w_g))
 
     return evaluate
-
-
-# def create_natural_movie(path):
-#     import cv2
-#     import cv2.cv
-#     cap = cv2.VideoCapture(path)
-#     ret = cap.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 320)
-#     ret = cap.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 240)
-#
-#
-#     while(cap.isOpened()):
-#         print(frame)
-#         ret, frame = cap.read()
-#         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-#         cv2.imshow('frame', gray)
-#         if cv2.waitKey(1) & 0xFF == ord('q'):
-#             break
-#
-#     cap.release()
-#     cv2.destroyAllWindows()

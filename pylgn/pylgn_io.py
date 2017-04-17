@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from .core import closure_params
 
+# TODO write doc
+
 
 class BaseIO(ABC):
     def __init__(self, filename):

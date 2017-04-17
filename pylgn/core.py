@@ -460,6 +460,10 @@ class Network:
 
         neuron.response = self.integrator.compute_inverse_fft(neuron.response_ft) * neuron.unit
 
+        # NOTE half-wave rectified function for cortical cells
+        if isinstance(neuron, Cortical):
+            neuron.response = neuron.response.clip(min=0*neuron.unit)
+
     def clear(self):
         """
         Clears the neuron list.
@@ -506,19 +510,19 @@ class Neuron(ABC):
         annotations : dict
             Dictionary with various annotations on the Neuron object.
         """
-        self.background_response = background_response
+        self.unit = 1. / pq.s
+        self.background_response = background_response if isinstance(background_response, pq.Quantity) else background_response * self.unit
         self.connections = defaultdict(list)
         self.response = None
         self.response_ft = None
         self.irf = None
         self.irf_ft = None
 
-        self.unit = 1. / pq.s
-
         self.irf_ft_is_computed = False
         self.response_ft_is_computed = False
         self.annotations = {"background_response": background_response}
-        self.annotations.update(annotations)
+        self.annotations.update({"connections": defaultdict(list)})
+        self.annotate(annotations)
 
     def annotate(self, annotations):
         """
@@ -533,7 +537,6 @@ class Neuron(ABC):
         self.annotations.update(annotations)
 
     def add_connection(self, neuron, kernel, weight):
-        # TODO: store connection params
         """
         Add connection to another neuron.
 
@@ -551,6 +554,9 @@ class Neuron(ABC):
                       "kernel": kernel,
                       "weight": weight}
         self.connections[type(neuron).__name__].append(connection)
+
+        annotation = {"kernel": closure_params(kernel), "weight": weight}
+        self.annotations["connections"][type(neuron).__name__.lower()].append(annotation)
 
     @abstractmethod
     def _check_if_connection_is_allowed(self, neuron):
@@ -672,7 +678,6 @@ class Relay(Neuron):
 
 
 class Cortical(Neuron):
-    # TODO: apply non-linear filter
     def __init__(self, background_response, annotations={}):
         """
         Cortical constructor

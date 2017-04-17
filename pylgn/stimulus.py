@@ -1,14 +1,11 @@
-"""
-stimulus class
-
-"""
-
 from abc import ABC, abstractmethod
 import numpy as np
 import quantities as pq
 import warnings
 
 from .helper import epsilon, heaviside, kronecker_delta, first_kind_bessel, find_nearst
+
+# TODO write doc
 
 
 def _check_valid_orient(orient):

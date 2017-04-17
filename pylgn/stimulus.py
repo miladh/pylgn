@@ -120,7 +120,7 @@ def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
 
         term_1 = np.where(arg_1 == 0, 1, 2 * first_kind_bessel(arg_1) / arg_1)
         term_2 = np.where(arg_2 == 0, 1, 2 * first_kind_bessel(arg_2) / arg_2)
-
+        print((factor * (term_1*kronecker_delta(w, w_g) + term_2*kronecker_delta(w, -w_g)).unit))
         return factor * (term_1*kronecker_delta(w, w_g) + term_2*kronecker_delta(w, -w_g))
 
     return evaluate

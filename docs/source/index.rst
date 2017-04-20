@@ -19,6 +19,7 @@ pylgn is a visual stimulus-driven simulator of spatiotemporal cell responses in 
    integrator
    kernels
    stimulus
+   citing
 
 Where to start
 --------------

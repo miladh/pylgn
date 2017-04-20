@@ -14,8 +14,8 @@ From papers
     examples/einevoll_2012
 
 
-Natural stimulus
-''''''''''''''''
+Natural scenes
+''''''''''''''
 .. toctree::
     :maxdepth: 1
 

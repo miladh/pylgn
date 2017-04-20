@@ -3,9 +3,7 @@ import numpy as np
 import quantities as pq
 import warnings
 
-from .helper import epsilon, heaviside, kronecker_delta, first_kind_bessel, find_nearst
-
-# TODO write doc
+from .helper import epsilon, heaviside, kronecker_delta, first_kind_bessel
 
 
 def _check_valid_orient(orient):
@@ -71,7 +69,7 @@ def create_fullfield_grating(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
 
     Returns
     -------
-    out : function
+    out : callable
         Evaluate function
 
 
@@ -120,7 +118,7 @@ def create_fullfield_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
 
     Returns
     -------
-    out : function
+    out : callable
         Evaluate function
 
     Notes
@@ -183,7 +181,7 @@ def create_patch_grating(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
 
     Returns
     -------
-    out : function
+    out : callable
         Evaluate function
 
 
@@ -238,7 +236,7 @@ def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
 
     Returns
     -------
-    out : function
+    out : callable
         Evaluate function
 
     Notes
@@ -282,5 +280,105 @@ def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
         term_2 = np.where(arg_2 == 0, 1, 2 * first_kind_bessel(arg_2) / arg_2)
 
         return factor.magnitude * (term_1*kronecker_delta(w, w_g) + term_2*kronecker_delta(w, -w_g))
+
+    return evaluate
+
+
+def create_natural_image(filename, delay=0*pq.ms, duration=None):
+    """
+    Creates natural image stimulus
+
+    Parameters
+    ----------
+    filename : string
+        path to image
+    delay : quantity scalar
+        Onset time
+    duration : quantity scalar
+
+    Returns
+    -------
+    out : callable
+        Evaluate function
+    """
+    from PIL import Image
+    im = Image.open(filename).convert("L").transpose(Image.FLIP_TOP_BOTTOM)
+
+    def evaluate(t, x, y):
+        """
+        Evaluates Fourier transformed patch grating function
+
+        Parameters
+        ----------
+        t : quantity scalar
+        x : quantity scalar
+        y : quantity scalar
+
+        Returns
+        -------
+        out : ndarray
+            Calculated values
+        """
+        Nt = t.shape[0]
+        Nx = x.shape[1]
+        Ny = y.shape[2]
+
+        stim = np.array(im.resize((Nx, Ny))) * heaviside(t - delay) * heaviside(duration - t + delay)
+        stim = 2 * ((stim - stim.min()) / (stim.max() - stim.min())) - 1
+
+        return stim
+
+    return evaluate
+
+
+def create_natural_movie(filename):
+    """
+    Creates natural movie stimulus
+
+    Parameters
+    ----------
+    filename : string
+        path to gif
+
+    Returns
+    -------
+    out : callable
+        Evaluate function
+    """
+    from PIL import Image
+    im = Image.open(filename)
+
+    def evaluate(t, x, y):
+        """
+        Evaluates Fourier transformed patch grating function
+
+        Parameters
+        ----------
+        t : quantity scalar
+        x : quantity scalar
+        y : quantity scalar
+
+        Returns
+        -------
+        out : ndarray
+            Calculated values
+        """
+        Nt = t.shape[0]
+        Nx = x.shape[1]
+        Ny = y.shape[2]
+
+        stim = np.zeros([Nt, Nx, Ny])
+        t_map = (t.flatten().rescale("ms").magnitude / im.info["duration"]).astype(int)
+        t_map = t_map[1:] - t_map[:-1]
+        for i, ti in enumerate(t_map):
+            try:
+                im.seek(im.tell()+ti)
+            except EOFError:
+                break
+            frame = im.convert("L").transpose(Image.FLIP_TOP_BOTTOM).resize((Nx, Ny))
+            stim[i, :, :] = np.array(frame)
+            stim[i, :, :] = 2 * ((stim[i, :, :] - stim[i, :, :].min()) / (stim[i, :, :].max() - stim[i, :, :].min())) - 1
+
+        return stim
 
     return evaluate

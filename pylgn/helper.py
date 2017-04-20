@@ -11,19 +11,19 @@ def find_nearst(array, value):
 
 def heaviside(x):
     return np.where(x < 0, 0.0, 1.0)
-    
+
 
 def kronecker_delta(x, y):
     return np.where(abs(x - y) < epsilon, 1.0, 0.0)
 
 
 def first_kind_bessel(x):
-    from scipy.special import jn 
+    from scipy.special import jn
     x = x.magnitude if isinstance(x, pq.Quantity) else x
     return jn(1, x)
 
 
 def confluent_hypergeometric(a, b, x):
-    from scipy.special import hyp1f1 
+    from scipy.special import hyp1f1
     x = x.magnitude if isinstance(x, pq.Quantity) else x
     return hyp1f1(a, b, x)

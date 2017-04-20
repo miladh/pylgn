@@ -347,6 +347,7 @@ def create_natural_movie(filename):
     """
     from PIL import Image
     im = Image.open(filename)
+    duration = im.info["duration"]*pq.ms if im.info["duration"] is not 0 else 30*pq.ms
 
     def evaluate(t, x, y):
         """
@@ -368,7 +369,7 @@ def create_natural_movie(filename):
         Ny = y.shape[2]
 
         stim = np.zeros([Nt, Nx, Ny])
-        t_map = (t.flatten().rescale("ms").magnitude / im.info["duration"]).astype(int)
+        t_map = (t.flatten().rescale("ms") / duration).astype(int)
         t_map = t_map[1:] - t_map[:-1]
         for i, ti in enumerate(t_map):
             try:

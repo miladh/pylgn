@@ -16,7 +16,7 @@ class MidpointNormalize(colors.Normalize):
         return np.ma.masked_array(np.interp(value, x, y))
 
 
-def animate_cube(cube, title=None, dt=None):
+def animate_cube(cube, title=None, dt=None, save_anim=False):
     fig = plt.figure()
     vmin = cube.min()
     vmax = cube.max()
@@ -46,4 +46,6 @@ def animate_cube(cube, title=None, dt=None):
                                    repeat=True, repeat_delay=1000)
 
     plt.colorbar()
+    if save_anim:
+        anim.save('im.mp4', writer="ffmpeg")
     plt.show()

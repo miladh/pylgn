@@ -31,6 +31,8 @@ Examples
   * :ref:`einevoll_2005`.
   * :ref:`einevoll_2012`.
 
+  * :ref:`natural_stimulus`.
+
 
 
 API reference

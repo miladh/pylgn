@@ -4,7 +4,7 @@ package:
 
 source:
   path: ..
- 
+
 build:
   script: python setup.py install
 
@@ -16,6 +16,7 @@ requirements:
     - matplotlib
     - quantities
     - h5py
+    - pillow
     - exdir
 
   run:
@@ -26,8 +27,9 @@ requirements:
     - scipy
     - quantities
     - h5py
+    - pillow
     - exdir
-    
+
 
 test:
   source_files:

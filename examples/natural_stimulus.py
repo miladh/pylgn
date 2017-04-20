@@ -10,10 +10,8 @@ network = pylgn.Network()
 integrator = network.create_integrator(nt=8, nr=9, dt=1*pq.ms, dr=0.1*pq.deg)
 
 # create kernels
-Wg_r = spl.create_dog_ft(A=1, a=0.62*pq.deg, B=0.83, b=1.26*pq.deg)
-Wg_t = tpl.create_biphasic_ft(phase_duration=43*pq.ms,
-                              damping_factor=0.38,
-                              delay=0*pq.ms)
+Wg_r = spl.create_dog_ft()
+Wg_t = tpl.create_biphasic_ft()
 
 # create neurons
 ganglion = network.create_ganglion_cell(kernel=(Wg_r, Wg_t))

@@ -255,8 +255,7 @@ class Network:
         Network constructor
         """
         self.neurons = []
-        self.stimulus = {}
-        pass
+        self.stimulus = None
 
     def create_integrator(self, nt, nr, dt, dr):
         """
@@ -347,13 +346,13 @@ class Network:
 
         return cortical
 
-    def set_stimulus(self, stimulus, compute_fft=False):
+    def set_stimulus(self, closure, compute_fft=False):
         """
         Sets stimulus.
 
         Parameters
         ----------
-        stimulus : function (closure)
+        closure : callable (closure)
             stimulus function. If compute_fft is False the
             stimulus function should be the Fourier transform
             of the stimulus.
@@ -362,18 +361,17 @@ class Network:
             the Fourier transform of the stimulus.
 
         """
-        self.stimulus["closure"] = stimulus
+        self.stimulus = Stimulus(closure)
         if not compute_fft:
             w_vec, kx_vec, ky_vec = self.integrator.freq_meshgrid()
-            stimulus_ft = stimulus(w=w_vec, kx=kx_vec, ky=ky_vec)
-            self.stimulus["ft"] = stimulus_ft
+            stimulus_ft = closure(w=w_vec, kx=kx_vec, ky=ky_vec)
+            self.stimulus.ft = stimulus_ft
         else:
             print("Calculating fft of stimulus...")
             t_vec, x_vec, y_vec = self.integrator.meshgrid()
-            spatiotemporal = stimulus(t=t_vec, x=x_vec, y=y_vec)
-            stimulus_ft = self.integrator.compute_fft(spatiotemporal)
-            self.stimulus["spatiotemporal"] = spatiotemporal
-            self.stimulus["ft"] = stimulus_ft
+            self.stimulus.ft = self.integrator.compute_fft(closure(t=t_vec,
+                                                                   x=x_vec,
+                                                                   y=y_vec))
 
     def connect(self, source, target, kernel, weight=1.0):
         """
@@ -418,14 +416,14 @@ class Network:
         ----------
         neuron : pylgn.Neuron
         """
-        if self.stimulus["ft"] is None:
+        if self.stimulus.ft is None:
             raise ValueError("Stimulus is not set. Use network.set_stimulus(stimuls).")
 
         neuron.response_ft_is_computed = True
         if not neuron.irf_ft_is_computed or recompute_irf_ft:
             self.compute_irf_ft(neuron)
 
-        neuron.response_ft = np.multiply(neuron.irf_ft, self.stimulus["ft"])
+        neuron.response_ft = np.multiply(neuron.irf_ft, self.stimulus.ft)
 
         if neuron.background_response.magnitude != 0:
             neuron.response_ft[0, 0, 0] += 8*np.pi**3 / self.integrator.dk.magnitude**2 / self.integrator.dw.magnitude * neuron.background_response.rescale(1/pq.s).magnitude
@@ -470,6 +468,28 @@ class Network:
         """
         del self.neurons[:]
 
+
+##############################################################
+# Stimulus
+##############################################################
+class Stimulus:
+    """
+    Stimulus class
+
+    Attributes
+    ----------
+    neurons : list
+         List with pylgn.Neuron objects
+    integrator : pylgn.Integrator
+         Integrator object
+    """
+    def __init__(self, closure):
+        """
+        Network constructor
+        """
+        self.spatiotemporal = None
+        self.ft = None
+        self.closure = closure
 
 ##############################################################
 # Neuron classes

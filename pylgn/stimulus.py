@@ -301,8 +301,6 @@ def create_natural_image(filename, delay=0*pq.ms, duration=None):
     out : callable
         Evaluate function
     """
-    from PIL import Image
-    im = Image.open(filename).convert("L").transpose(Image.FLIP_TOP_BOTTOM)
 
     def evaluate(t, x, y):
         """
@@ -319,6 +317,9 @@ def create_natural_image(filename, delay=0*pq.ms, duration=None):
         out : ndarray
             Calculated values
         """
+        from PIL import Image
+        im = Image.open(filename).convert("L").transpose(Image.FLIP_TOP_BOTTOM)
+
         Nt = t.shape[0]
         Nx = x.shape[1]
         Ny = y.shape[2]
@@ -345,9 +346,6 @@ def create_natural_movie(filename):
     out : callable
         Evaluate function
     """
-    from PIL import Image
-    im = Image.open(filename)
-    duration = im.info["duration"]*pq.ms if im.info["duration"] is not 0 else 30*pq.ms
 
     def evaluate(t, x, y):
         """
@@ -364,6 +362,10 @@ def create_natural_movie(filename):
         out : ndarray
             Calculated values
         """
+        from PIL import Image
+        im = Image.open(filename)
+        duration = im.info["duration"]*pq.ms if im.info["duration"] is not 0 else 30*pq.ms
+
         Nt = t.shape[0]
         Nx = x.shape[1]
         Ny = y.shape[2]

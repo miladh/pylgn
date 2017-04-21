@@ -10,7 +10,7 @@ class BaseIO(ABC):
 
     def write_network(self, network):
         self.write_integrator_params(network.integrator)
-        self.write_stimulus_params(network.stimulus["closure"])
+        self.write_stimulus_params(network.stimulus.closure)
         self.write_stimulus(network.stimulus)
         for neuron in network.neurons:
             self.write_neuron(neuron)
@@ -62,16 +62,18 @@ class ExdirIO(BaseIO):
 
     def write_stimulus(self, stimulus):
         stimulus_grp = self.file.require_group("stimulus")
-        if stimulus.get("spatiotemporal") is not None:
-            stimulus_grp.require_dataset("spatiotemporal", data=stimulus["spatiotemporal"])
+        if stimulus.spatiotemporal is not None:
+            stimulus_grp.require_dataset("spatiotemporal", data=stimulus.spatiotemporal)
 
-        if stimulus.get("ft") is not None:
-            stimulus_grp.require_dataset("fourier_transform", data=stimulus["ft"])
+        if stimulus.ft is not None:
+            stimulus_grp.require_dataset("fourier_transform", data=stimulus.ft)
 
     def write_neuron(self, neuron):
+        # TODO: fix defaultdict
+        from collections import defaultdict
         name = type(neuron).__name__.lower()
         neuron_grp = self.file.require_group(name)
-        neuron_grp.attrs = neuron.annotations
+        neuron_grp.attrs = [key for key in neuron.annotations if key is not isinstance(neuron.annotations[key], defaultdict)]
 
         if neuron.response is not None:
             response_grp = neuron_grp.require_group("response")
@@ -120,11 +122,11 @@ class Hdf5IO(BaseIO):
 
     def write_stimulus(self, stimulus):
         stimulus_grp = self.file.require_group("stimulus")
-        if stimulus.get("spatiotemporal") is not None:
-            stimulus_grp.create_dataset("spatiotemporal", data=stimulus["spatiotemporal"])
+        if stimulus.spatiotemporal is not None:
+            stimulus_grp.create_dataset("spatiotemporal", data=stimulus.spatiotemporal)
 
-        if stimulus.get("ft") is not None:
-            stimulus_grp.create_dataset("fourier_transform", data=stimulus["ft"])
+        if stimulus.ft is not None:
+            stimulus_grp.create_dataset("fourier_transform", data=stimulus.ft)
 
     def write_neuron(self, neuron):
         name = type(neuron).__name__.lower()

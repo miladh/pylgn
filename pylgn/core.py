@@ -205,11 +205,8 @@ class Integrator:
             transformed array
 
         """
-        cube_ifft = np.fft.irfftn(cube)
-
-        for i in range(cube.shape[0]):
-            cube_ifft[i, :, :] = np.fft.fftshift(cube_ifft[i, :, :])
-        return cube_ifft * self._ifft_factor
+        cube = np.fft.irfftn(cube)
+        return np.fft.fftshift(cube, axes=(1, 2)) * self._ifft_factor
 
     def compute_fft(self, cube):
         """
@@ -227,13 +224,8 @@ class Integrator:
             transformed array
 
         """
-        cube_fft = cube
-        for i in range(cube.shape[0]):
-            cube_fft[i, :, :] = np.fft.fftshift(cube_fft[i, :, :])
-
-        cube_fft = np.fft.rfftn(cube)
-
-        return cube_fft * self._fft_factor
+        cube = np.fft.rfftn(np.fft.fftshift(cube, axes=(1, 2)))
+        return cube * self._fft_factor
 
 
 ##############################################################
@@ -249,13 +241,16 @@ class Network:
          List with pylgn.Neuron objects
     integrator : pylgn.Integrator
          Integrator object
+    stimulus : pylgn.Stimulus
+         Stimulus object
     """
-    def __init__(self):
+    def __init__(self, memory_efficient=False):
         """
         Network constructor
         """
         self.neurons = []
         self.stimulus = None
+        self.memory_efficient = memory_efficient
 
     def create_integrator(self, nt, nr, dt, dr):
         """
@@ -428,6 +423,11 @@ class Network:
         if neuron.background_response.magnitude != 0:
             neuron.response_ft[0, 0, 0] += 8*np.pi**3 / self.integrator.dk.magnitude**2 / self.integrator.dw.magnitude * neuron.background_response.rescale(1/pq.s).magnitude
 
+        if self.memory_efficient:
+            neuron.irf_ft_is_computed = False
+            neuron.irf_ft = None
+            self.stimulus.ft = None
+
     def compute_irf(self, neuron, recompute_ft=False):
         """
         Computes the impulse-response function of a neuron.
@@ -443,6 +443,10 @@ class Network:
 
         neuron.irf = self.integrator.compute_inverse_fft(neuron.irf_ft) * neuron.unit
 
+        if self.memory_efficient:
+            neuron.irf_ft_is_computed = False
+            neuron.irf_ft = None
+
     def compute_response(self, neuron, recompute_ft=False):
         """
         Computes the response of a neuron.
@@ -457,6 +461,10 @@ class Network:
             self.compute_response_ft(neuron, recompute_irf_ft=True)
 
         neuron.response = self.integrator.compute_inverse_fft(neuron.response_ft) * neuron.unit
+
+        if self.memory_efficient:
+            neuron.response_ft_is_computed = False
+            neuron.response_ft = None
 
         # NOTE half-wave rectified function for cortical cells
         if isinstance(neuron, Cortical):

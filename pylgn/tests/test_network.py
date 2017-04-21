@@ -15,11 +15,11 @@ def test_edog_patch_grating_response():
                            [0.4933473520, 0.3005140715],
                            [0.5038172723, 0.2842527074],
                            [0.5039615741, 0.2843698815]]) / pq.s
-    fb_weights = [0, -1.5] 
+    fb_weights = [0, -1.5]
 
-    patch_diameter = np.linspace(0, 6, 5) * pq.deg 
+    patch_diameter = np.linspace(0, 6, 5) * pq.deg
     response = np.zeros([len(patch_diameter), len(fb_weights)]) / pq.s
-     
+
     for j, w_c in enumerate(fb_weights):
         network = pylgn.Network()
         integrator = network.create_integrator(nt=1, nr=7, dt=1*pq.ms, dr=0.1*pq.deg)
@@ -32,7 +32,7 @@ def test_edog_patch_grating_response():
         ganglion = network.create_ganglion_cell(kernel=(Wg_r, delta_t))
         relay = network.create_relay_cell()
         cortical = network.create_cortical_cell()
- 
+
         network.connect(ganglion, relay, (delta_s, delta_t), 1.0)
         network.connect(cortical, relay, (Krc_r, delta_t), w_c)
         network.connect(relay, cortical, (delta_s, delta_t), 1.0)
@@ -41,10 +41,10 @@ def test_edog_patch_grating_response():
             stimulus = pylgn.stimulus.create_patch_grating_ft(wavenumber=integrator.spatial_freqs[4], patch_diameter=d)
             network.set_stimulus(stimulus)
             network.compute_response(relay, recompute_ft=True)
-            response[i, j] = relay.center_response[0] 
+            response[i, j] = relay.center_response[0]
 
         network.clear()
-    
+
     assert (abs(response - response_e) < 1e-10).all()
 
 
@@ -55,11 +55,11 @@ def test_edog_spot_response():
                            [0.1824324695, 0.0174985410],
                            [0.1505469275, 0.0632031066],
                            [0.1500017999, 0.0601939846]]) / pq.s
-    fb_weights = [0, -1.5] 
+    fb_weights = [0, -1.5]
 
-    patch_diameter = np.linspace(0, 6, 5) * pq.deg 
+    patch_diameter = np.linspace(0, 6, 5) * pq.deg
     response = np.zeros([len(patch_diameter), len(fb_weights)]) / pq.s
-     
+
     for j, w_c in enumerate(fb_weights):
         network = pylgn.Network()
         integrator = network.create_integrator(nt=1, nr=7, dt=1*pq.ms, dr=0.1*pq.deg)
@@ -72,7 +72,7 @@ def test_edog_spot_response():
         ganglion = network.create_ganglion_cell(kernel=(Wg_r, delta_t))
         relay = network.create_relay_cell()
         cortical = network.create_cortical_cell()
- 
+
         network.connect(ganglion, relay, (delta_s, delta_t), 1.0)
         network.connect(cortical, relay, (Krc_r, delta_t), w_c)
         network.connect(relay, cortical, (delta_s, delta_t), 1.0)
@@ -82,10 +82,10 @@ def test_edog_spot_response():
                                                               patch_diameter=d)
             network.set_stimulus(stimulus)
             network.compute_response(relay, recompute_ft=True)
-            response[i, j] = relay.center_response[0] 
+            response[i, j] = relay.center_response[0]
 
         network.clear()
-    
+
     assert (abs(response - response_e) < 1e-10).all()
 
 
@@ -104,7 +104,7 @@ def test_dog_patch_grating_response():
     step = 5
     patch_diameter = np.array([3, 1.5, 0.85, 0.3]) * pq.deg
     response = np.zeros([int(k_max_id/step), len(patch_diameter)]) / pq.s
-     
+
     network = pylgn.Network()
 
     integrator = network.create_integrator(nt=1, nr=7, dt=1*pq.ms, dr=0.1*pq.deg)
@@ -123,17 +123,17 @@ def test_dog_patch_grating_response():
 
             network.compute_response(ganglion, recompute_ft=True)
             response[i, j] = ganglion.center_response[0]
-    
+
     assert (abs(response - response_e) < 1e-10).all()
     
 
 @pytest.mark.network
 def test_nonlagged_x_cells():
     R_g_e = np.array([36.8000000000, 105.5231755992, 80.5607155005, 60.1117829282, 56.7461598311, 56.5031395446, 56.4951231072, 56.4950008690, 56.4950000029, 56.4950000000])/pq.s
-    
+
     R_r_e = np.array([9.1000000000, 48.9839667670, 20.1915848052, 11.3884937007, 13.2064761119, 13.9269478889, 14.0176607852, 14.0235290468, 14.0237452461, 14.0237499389])/pq.s
-    
-    patch_diameter = np.linspace(0, 14, 10) * pq.deg 
+
+    patch_diameter = np.linspace(0, 14, 10) * pq.deg
     R_g = np.zeros(len(patch_diameter)) / pq.s
     R_r = np.zeros(len(patch_diameter)) / pq.s
 
@@ -145,7 +145,7 @@ def test_nonlagged_x_cells():
     Wg_r = spl.create_dog_ft(A=-1, a=0.62*pq.deg, B=-0.85, b=1.26*pq.deg)
     Krig_r = spl.create_gauss_ft(A=1, a=0.88*pq.deg)
     Krg_r = spl.create_delta_ft()
-   
+
     ganglion.set_kernel((Wg_r, tpl.create_delta_ft()))
     network.connect(ganglion, relay, (Krg_r, tpl.create_delta_ft()), weight=0.81)
     network.connect(ganglion, relay, (Krig_r, tpl.create_delta_ft()), weight=-0.56)
@@ -157,8 +157,8 @@ def test_nonlagged_x_cells():
         network.compute_response(ganglion, recompute_ft=True)
         network.compute_response(relay, recompute_ft=True)
 
-        R_g[i] = ganglion.center_response[0] 
-        R_r[i] = relay.center_response[0] 
-    
+        R_g[i] = ganglion.center_response[0]
+        R_r[i] = relay.center_response[0]
+
     assert (abs(R_g - R_g_e) < 1e-10).all()
     assert (abs(R_r - R_r_e) < 1e-10).all()

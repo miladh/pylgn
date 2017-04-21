@@ -4,6 +4,21 @@ from .core import closure_params
 # TODO write doc
 
 
+def _convert_defaultdict_list(list_dict):
+    annotations = {}
+    for key, value in list_dict.items():
+        annotations[key] = {}
+        for i, item in enumerate(value):
+            annotations[key][str(key)+"_"+str(i)] = item
+
+    print(annotations)
+    return annotations
+
+
+##############################################################
+# BaseIO
+##############################################################
+
 class BaseIO(ABC):
     def __init__(self, filename):
         pass
@@ -69,11 +84,17 @@ class ExdirIO(BaseIO):
             stimulus_grp.require_dataset("fourier_transform", data=stimulus.ft)
 
     def write_neuron(self, neuron):
-        # TODO: fix defaultdict
         from collections import defaultdict
         name = type(neuron).__name__.lower()
         neuron_grp = self.file.require_group(name)
-        neuron_grp.attrs = [key for key in neuron.annotations if key is not isinstance(neuron.annotations[key], defaultdict)]
+        annotations = {}
+        for key, value in neuron.annotations.items():
+            if isinstance(value, defaultdict):
+                annotations[key] = _convert_defaultdict_list(value)
+            else:
+                annotations[key] = value
+
+        neuron_grp.attrs = annotations
 
         if neuron.response is not None:
             response_grp = neuron_grp.require_group("response")

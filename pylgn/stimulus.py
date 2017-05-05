@@ -284,7 +284,95 @@ def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
     return evaluate
 
 
-def create_natural_image(filename, delay=0*pq.ms, duration=None):
+def create_flashing_spot(contrast=1, patch_diameter=1*pq.deg,
+                         delay=0*pq.ms, duration=0*pq.ms):
+    # TODO write tests
+    """
+    Create flashing spot
+
+
+    Parameters
+    ----------
+    contrast : float
+        Contrast value
+    patch_diameter : float/quantity scalar
+        Patch size
+
+    Returns
+    -------
+    out : callable
+        Evaluate function
+
+    """
+    def evaluate(t, x, y):
+        """
+        Evaluates flashing spot
+
+        Parameters
+        ----------
+        t : float/quantity scalar
+        x : float/quantity scalar
+        y : float/quantity scalar
+
+        Returns
+        -------
+        out : ndarray
+            Calculated values
+        """
+        r = np.sqrt(x**2 + y**2)
+
+        return contrast * (1 - heaviside(r - patch_diameter*0.5)) * (heaviside(t - delay) - heaviside(t - delay - duration))
+
+    return evaluate
+
+
+def create_flashing_spot_ft(contrast=1, patch_diameter=1*pq.deg,
+                            delay=0*pq.ms, duration=0*pq.ms):
+    # TODO write tests
+    """
+    Create Fourier transformed flashing spot
+
+
+    Parameters
+    ----------
+    contrast : float
+        Contrast value
+    patch_diameter : float/quantity scalar
+        Patch size
+
+    Returns
+    -------
+    out : callable
+        Evaluate function
+
+    """
+    def evaluate(w, kx, ky):
+        """
+        Evaluates Fourier transformed flashing spot function
+
+        Parameters
+        ----------
+        w : float/quantity scalar
+        kx : float/quantity scalar
+        ky : float/quantity scalar
+
+        Returns
+        -------
+        out : ndarray
+            Calculated values
+        """
+        arg = np.sqrt(kx**2 + ky**2) * patch_diameter * 0.5
+        spatial = np.where(arg == 0, 1, 2 * first_kind_bessel(arg) / arg)
+
+        half_duration = duration.rescale(1/w.units) / 2
+        temporal = np.sinc(w * half_duration / np.pi) * np.exp(1j * w * (delay + half_duration))
+
+        return half_duration.magnitude * patch_diameter.magnitude**2 * temporal * spatial
+
+    return evaluate
+
+
+def create_natural_image(filename, delay=0*pq.ms, duration=0*pq.ms):
     """
     Creates natural image stimulus
 
@@ -324,7 +412,7 @@ def create_natural_image(filename, delay=0*pq.ms, duration=None):
         Nx = x.shape[1]
         Ny = y.shape[2]
 
-        stim = np.array(im.resize((Nx, Ny))) * heaviside(t - delay) * heaviside(duration - t + delay)
+        stim = np.array(im.resize((Nx, Ny))) * (heaviside(t - delay) - heaviside(t - delay - duration))
         stim = 2 * ((stim - stim.min()) / (stim.max() - stim.min())) - 1
 
         return stim

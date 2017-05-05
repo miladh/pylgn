@@ -6,10 +6,10 @@ import pylgn
 import pylgn.kernels.spatial as spl
 import pylgn.kernels.temporal as tpl
 
-k_max_id = 40 
+k_max_id = 40
 patch_diameter = np.array([3, 1.5, 0.85, 0.3]) * pq.deg
 response = np.zeros([k_max_id, len(patch_diameter)]) / pq.s
- 
+
 # create network
 network = pylgn.Network()
 
@@ -33,11 +33,11 @@ for j, d in enumerate(patch_diameter):
         # compute
         network.compute_response(ganglion, recompute_ft=True)
         response[i, j] = ganglion.center_response[0]
-        
+
 # visualize
 for d, R in zip(patch_diameter, response.T):
     plt.plot(spatial_freqs, R, '-o', label="Diameter={}".format(d))
-    
+
 plt.xlabel("Wavenumber (1/deg)")
 plt.ylabel("Response")
 plt.legend()

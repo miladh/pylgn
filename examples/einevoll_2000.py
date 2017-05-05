@@ -7,8 +7,8 @@ import pylgn.kernels as kernel
 import pylgn.kernels.spatial as spl
 import pylgn.kernels.temporal as tpl
 
-    
-patch_diameter = np.linspace(0, 14, 50) * pq.deg 
+
+patch_diameter = np.linspace(0, 14, 50) * pq.deg
 R_g = np.zeros(len(patch_diameter)) / pq.s
 R_r = np.zeros(len(patch_diameter)) / pq.s
 
@@ -27,7 +27,7 @@ Wg_r = spl.create_dog_ft(A=-1, a=0.62*pq.deg, B=-0.85, b=1.26*pq.deg)
 Krig_r = spl.create_gauss_ft(A=1, a=0.88*pq.deg)
 Krg_r = spl.create_delta_ft()
 
-# connect neurons    
+# connect neurons
 ganglion.set_kernel((Wg_r, tpl.create_delta_ft()))
 network.connect(ganglion, relay, (Krg_r, tpl.create_delta_ft()), weight=0.81)
 network.connect(ganglion, relay, (Krig_r, tpl.create_delta_ft()), weight=-0.56)
@@ -41,8 +41,8 @@ for i, d in enumerate(patch_diameter):
     network.compute_response(ganglion, recompute_ft=True)
     network.compute_response(relay, recompute_ft=True)
 
-    R_g[i] = ganglion.center_response[0] 
-    R_r[i] = relay.center_response[0] 
+    R_g[i] = ganglion.center_response[0]
+    R_r[i] = relay.center_response[0]
 
 # visualize
 plt.plot(patch_diameter, R_g, '-o', label="Ganglion")

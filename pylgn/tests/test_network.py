@@ -125,7 +125,7 @@ def test_dog_patch_grating_response():
             response[i, j] = ganglion.center_response[0]
 
     assert (abs(response - response_e) < 1e-10).all()
-    
+
 
 @pytest.mark.network
 def test_nonlagged_x_cells():
@@ -138,7 +138,7 @@ def test_nonlagged_x_cells():
     R_r = np.zeros(len(patch_diameter)) / pq.s
 
     network = pylgn.Network()
-    integrator = network.create_integrator(nt=1, nr=8, dt=1*pq.ms, dr=0.1*pq.deg)
+    integrator = network.create_integrator(nt=1, nr=7, dt=1*pq.ms, dr=0.2*pq.deg)
     ganglion = network.create_ganglion_cell(background_response=36.8/pq.s)
     relay = network.create_relay_cell(background_response=9.1/pq.s)
 
@@ -160,5 +160,5 @@ def test_nonlagged_x_cells():
         R_g[i] = ganglion.center_response[0]
         R_r[i] = relay.center_response[0]
 
-    assert (abs(R_g - R_g_e) < 1e-10).all()
-    assert (abs(R_r - R_r_e) < 1e-10).all()
+    assert (abs(R_g - R_g_e) < 1e-9).all()
+    assert (abs(R_r - R_r_e) < 1e-9).all()

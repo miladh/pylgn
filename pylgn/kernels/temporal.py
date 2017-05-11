@@ -71,15 +71,15 @@ def create_delta_ft(delay=0*pq.ms):
     return evaluate
 
 
-def create_biphasic(phase_duration=43*pq.ms, damping_factor=0.38, delay=0*pq.ms):
+def create_biphasic(phase=42.5*pq.ms, damping=0.38, delay=0*pq.ms):
     """
     Create Biphasic closure
 
     Parameters
     ----------
-    phase_duration : float/quantity scalar
+    phase : float/quantity scalar
         Delay
-    damping_factor : float
+    damping : float
         Damping factor
     delay : float/quantity scalar
         Delay
@@ -103,17 +103,17 @@ def create_biphasic(phase_duration=43*pq.ms, damping_factor=0.38, delay=0*pq.ms)
             Calculated values
         """
         delta_t = t - delay
-        sin_term = np.sin(np.pi/phase_duration * delta_t)
+        sin_term = np.sin(np.pi/phase * delta_t)
 
         condition1 = delta_t < 0
-        condition2 = np.logical_and(0 <= delta_t, delta_t <= phase_duration)
-        condition3 = np.logical_and(phase_duration < delta_t,
-                                    delta_t <= 2*phase_duration)
-        condition4 = delta_t > 2*phase_duration
+        condition2 = np.logical_and(0 <= delta_t, delta_t <= phase)
+        condition3 = np.logical_and(phase < delta_t,
+                                    delta_t <= 2*phase)
+        condition4 = delta_t > 2*phase
 
         r = np.where(condition1, 0.0, 0.0)
         r = np.where(condition2, sin_term, r)
-        r = np.where(condition3, damping_factor*sin_term, r)
+        r = np.where(condition3, damping*sin_term, r)
         r = np.where(condition4, 0.0, r)
 
         return r
@@ -121,15 +121,15 @@ def create_biphasic(phase_duration=43*pq.ms, damping_factor=0.38, delay=0*pq.ms)
     return evaluate
 
 
-def create_biphasic_ft(phase_duration, damping_factor, delay=0*pq.ms):
+def create_biphasic_ft(phase=43*pq.ms, damping=0.38, delay=0*pq.ms):
     """
     Create Fourier transformed Biphasic closure
 
     Parameters
     ----------
-    phase_duration : float/quantity scalar
+    phase : float/quantity scalar
         Delay
-    damping_factor : float
+    damping : float
         Damping factor
     delay : float/quantity scalar
         Delay
@@ -152,10 +152,10 @@ def create_biphasic_ft(phase_duration, damping_factor, delay=0*pq.ms):
         out : ndarray
             Calculated values
         """
-        factor = np.pi * phase_duration / (np.pi**2 - phase_duration**2 * w**2)
-        exp_term = np.exp(1j * phase_duration * w)
-        term1 = 1. + (1. - damping_factor) * exp_term
-        term2 = damping_factor * np.exp(1j * phase_duration * 2.*w)
+        factor = np.pi * phase / (np.pi**2 - phase**2 * w**2)
+        exp_term = np.exp(1j * phase * w)
+        term1 = 1. + (1. - damping) * exp_term
+        term2 = damping * np.exp(1j * phase * 2.*w)
 
         factor = factor.magnitude if isinstance(factor, pq.Quantity) else factor  # TODO: hack
         return factor * np.exp(1j * delay * w) * (term1 - term2)
@@ -229,5 +229,23 @@ def create_exp_decay_ft(tau, delay):
             Calculated values
         """
         return np.exp(1j * w * delay) / (1 - 1j * w * tau)
+
+    return evaluate
+
+
+def create_doe_ft(tau_cen, tau_sur, delay):
+    def evaluate(w):
+        exp_factor = np.exp(1j * w * delay)
+        center = exp_factor / (1. - tau_cen * w * 1j)**2
+        surround = exp_factor / (1. - tau_sur * w * 1j)**2
+
+        return center - surround
+
+    return evaluate
+
+
+def create_poly_exp_decay_ft(tau, delay):
+    def evaluate(w):
+        return np.exp(1j * w * delay) * -1j * w.magnitude / (1 - 1j * w * tau)**3
 
     return evaluate

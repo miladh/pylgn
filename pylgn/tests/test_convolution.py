@@ -40,16 +40,16 @@ def test_biphasic_delta():
     shift_x = x_vec.flatten()[-3]
     shift_y = y_vec.flatten()[8]
 
-    phase_duration, damping_factor = 42.5*pq.ms, 0.38
+    phase, damping = 42.5*pq.ms, 0.38
 
-    W_ft = tpl.create_biphasic_ft(phase_duration=phase_duration,
-                                  damping_factor=damping_factor,
+    W_ft = tpl.create_biphasic_ft(phase=phase,
+                                  damping=damping,
                                   delay=delay_W)(w_vec) * spl.create_delta_ft(shift_x=shift_x)(kx_vec, ky_vec)
     K_ft = tpl.create_delta_ft(delay_K)(w_vec) * spl.create_delta_ft(shift_y=shift_y)(kx_vec, ky_vec)
     G = integrator.compute_inverse_fft(W_ft * K_ft)
 
-    F = tpl.create_biphasic(phase_duration=phase_duration,
-                            damping_factor=damping_factor,
+    F = tpl.create_biphasic(phase=phase,
+                            damping=damping,
                             delay=delay_W)(t_vec-delay_K) * spl.create_delta(1, shift_x=shift_x)(x_vec, y_vec-shift_y)
 
     assert (abs(G - F) < complex(1e-3, 1e-12)).all()

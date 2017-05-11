@@ -10,7 +10,7 @@ import pylgn.kernels.temporal as tpl
 
 @pytest.mark.core
 def test_core():
-    dt = 1*pq.ms
+    dt = 1.*pq.ms
     dr = 0.1*pq.deg
 
     # create network
@@ -21,15 +21,14 @@ def test_core():
 
     # create neurons
     ganglion = network.create_ganglion_cell()
-    relay = network.create_relay_cell(2/pq.ms)
-    cortical = network.create_cortical_cell(0/pq.ms)
+    relay = network.create_relay_cell(2./pq.s)
+    cortical = network.create_cortical_cell(0/pq.s)
 
     # connect neurons
     Wg_r = spl.create_dog_ft(A=1, a=0.62*pq.deg, B=0.83, b=1.26*pq.deg)
-    Wg_t = tpl.create_delta_ft(delay=0*pq.ms)
-    # Wg_t = tpl.create_biphasic_ft(phase_duration=43*pq.ms,
-    #                               damping_factor=0.38,
-    #                               delay=0*pq.ms)
+    Wg_t = tpl.create_biphasic_ft(phase=43*pq.ms,
+                                  damping=0.38,
+                                  delay=0*pq.ms)
 
     Krg_r = spl.create_delta_ft(shift_x=0*pq.deg, shift_y=0*pq.deg)
     Krg_t = tpl.create_delta_ft(delay=0*pq.ms)
@@ -50,33 +49,37 @@ def test_core():
     # create stimulus
     k_g = integrator.spatial_freqs[6]
     w_g = -integrator.temporal_freqs[1]
-    stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=w_g,
-                                                      wavenumber=k_g,
-                                                      orient=0.0,
-                                                      patch_diameter=3,
-                                                      contrast=4)
+    # stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=w_g,
+    #                                                   wavenumber=k_g,
+    #                                                   orient=0.0,
+    #                                                   patch_diameter=3,
+    #                                                   contrast=4)
+    stimulus = pylgn.stimulus.create_flashing_spot_ft(patch_diameter=4*pq.deg,
+                                                      contrast=4,
+                                                      delay=4*pq.ms,
+                                                      duration=20*pq.ms)
     network.set_stimulus(stimulus)
 
-    print(pylgn.closure_params(stimulus))
-
-    # compute
+    # print(pylgn.closure_params(stimulus))
+    #
+    # # compute
     network.compute_irf(relay)
     network.compute_response(relay)
     network.compute_response(ganglion)
-
-    # write
-    print("shape cube: ", relay.irf_ft.shape)
-    print("Unit irf:", relay.irf.units)
-    # print("Units irf_ft: ", relay.irf_ft.units)
-    print("Units resp: ", relay.response.units)
+    #
+    # # write
+    # print("shape cube: ", relay.irf_ft.shape)
+    # print("Unit irf:", relay.irf.units)
+    # # print("Units irf_ft: ", relay.irf_ft.units)
+    # print("Units resp: ", relay.response.units)
 
     # visulize
     # import matplotlib.pyplot as plt
     # import matplotlib.animation as animation
     # plt.imshow(relay.irf[0, :, :].real)
     #
-    # plt.figure()
-    # plt.plot(np.real(ganglion.response[:, 3, 3]))
+    # # plt.figure()
+    # plt.plot(np.real(ganglion.response[:, 64, 64]))
     # pylgn.plot.animate_cube(ganglion.response)
 
     # clear network

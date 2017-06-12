@@ -10,14 +10,14 @@ import pylgn.kernels.temporal as tpl
 
 @pytest.mark.core
 def test_core():
-    dt = 1.*pq.ms
+    dt = 5*pq.ms
     dr = 0.1*pq.deg
 
     # create network
     network = pylgn.Network()
 
     # create integrator
-    integrator = network.create_integrator(nt=7, nr=7, dt=dt, dr=dr)
+    integrator = network.create_integrator(nt=10, nr=7, dt=dt, dr=dr)
 
     # create neurons
     ganglion = network.create_ganglion_cell()
@@ -33,8 +33,8 @@ def test_core():
     Krg_r = spl.create_delta_ft(shift_x=0*pq.deg, shift_y=0*pq.deg)
     Krg_t = tpl.create_delta_ft(delay=0*pq.ms)
 
-    Krc_r = spl.create_dog_ft(A=0.3, a=0.1*pq.deg, B=0.6, b=0.9*pq.deg)
-    Krc_t = tpl.create_delta_ft(delay=0*pq.ms)
+    Krc_r = spl.create_dog_ft(A=1*0.9, a=0.1*pq.deg, B=2*0.9, b=0.9*pq.deg)
+    Krc_t = tpl.create_delta_ft(delay=20*pq.ms)
 
     Kcr_r = spl.create_delta_ft(shift_x=0*pq.deg, shift_y=0*pq.deg)
     Kcr_t = tpl.create_delta_ft(delay=0*pq.ms)
@@ -47,8 +47,8 @@ def test_core():
     print(ganglion.annotations["kernel"], "\n")
 
     # create stimulus
-    k_g = integrator.spatial_freqs[6]
-    w_g = -integrator.temporal_freqs[1]
+    k_g = integrator.spatial_freqs[2]
+    w_g = -integrator.temporal_freqs[40]
     # stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=w_g,
     #                                                   wavenumber=k_g,
     #                                                   orient=0.0,
@@ -58,14 +58,15 @@ def test_core():
                                                       contrast=4,
                                                       delay=4*pq.ms,
                                                       duration=20*pq.ms)
-    network.set_stimulus(stimulus)
+    network.set_stimulus(stimulus, compute_fft=False)
+    # network.set_stimulus(stimulus)
 
     # print(pylgn.closure_params(stimulus))
     #
     # # compute
-    network.compute_irf(relay)
+    # network.compute_irf(relay)
     network.compute_response(relay)
-    network.compute_response(ganglion)
+    # network.compute_response(ganglion)
     #
     # # write
     # print("shape cube: ", relay.irf_ft.shape)
@@ -75,12 +76,15 @@ def test_core():
 
     # visulize
     # import matplotlib.pyplot as plt
-    # import matplotlib.animation as animation
-    # plt.imshow(relay.irf[0, :, :].real)
+    # # import matplotlib.animation as animation
+    # # plt.imshow(relay.irf[0, :, :].real)
     #
-    # # plt.figure()
-    # plt.plot(np.real(ganglion.response[:, 64, 64]))
-    # pylgn.plot.animate_cube(ganglion.response)
+    # plt.figure()
+    # # plt.plot(integrator.times, relay.response[:, 64, 64])
+    # w_g = w_g.rescale(pq.Hz) * integrator.times/integrator.times.max()
+    # plt.plot(w_g/2./np.pi, relay.response[:, 64, 64])
+    # plt.show()
+    # pylgn.plot.animate_cube(relay.response)
 
     # clear network
     network.clear()

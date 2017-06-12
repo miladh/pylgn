@@ -258,3 +258,190 @@ def test_fullfield_grating():
                                                        orient=0,
                                                        contrast=2.1)
     assert abs(stimulus(t=1.2*pq.ms, x=2.30*pq.deg, y=-2.2*pq.deg) - -0.726845819863) < 1e-12
+
+
+def test_patch_grating():
+    stimulus = pylgn.stimulus.create_patch_grating(angular_freq=0,
+                                                   wavenumber=0,
+                                                   orient=0,
+                                                   contrast=1,
+                                                   patch_diameter=1.4*pq.deg)
+    assert stimulus(t=0*pq.s, x=0*pq.deg, y=0*pq.deg) == 1
+    assert stimulus(t=3.5*pq.s, x=0.4*pq.deg, y=-0.3*pq.deg) == 1
+    assert stimulus(t=1.2*pq.s, x=2.30*pq.deg, y=-2.34*pq.deg) == 0
+
+    with pytest.warns(UserWarning):
+        stimulus = pylgn.stimulus.create_patch_grating(angular_freq=-2.945243112740431*pq.kHz,
+                                                       wavenumber=0.785398163397448,
+                                                       orient=180,
+                                                       contrast=1.,
+                                                       patch_diameter=8*pq.deg)
+
+    assert abs(stimulus(t=1.2*pq.ms, x=2.30*pq.deg, y=-2.2*pq.deg) - 0.587785252292) < 1e-12
+    assert stimulus(t=1.2*pq.s, x=9.30*pq.deg, y=-2.34*pq.deg) == 0
+
+    with pytest.warns(UserWarning):
+        stimulus = pylgn.stimulus.create_patch_grating(angular_freq=-2.945243112740431*pq.kHz,
+                                                       wavenumber=0.785398163397448,
+                                                       orient=180,
+                                                       contrast=1.,
+                                                       patch_diameter=8*pq.deg)
+        assert abs(stimulus(t=2.1*pq.s, x=2.30*pq.deg, y=-2.2*pq.deg) - -0.522498564716) < 1e-12
+        assert stimulus(t=1.2*pq.s, x=1.30*pq.deg, y=-7.34*pq.deg) == 0
+
+    stimulus = pylgn.stimulus.create_patch_grating(angular_freq=2.356194490192345*pq.kHz,
+                                                   wavenumber=-0.39269908169872414,
+                                                   orient=0,
+                                                   contrast=2.1,
+                                                   patch_diameter=8*pq.deg)
+
+    assert abs(stimulus(t=1.2*pq.ms, x=2.30*pq.deg, y=-2.2*pq.deg) - -0.726845819863) < 1e-12
+    assert stimulus(t=1.2*pq.s, x=1.30*pq.deg, y=-7.34*pq.deg) == 0
+
+
+def test_patch_grating_ft():
+    C = 23.4
+    size = 1*pq.deg
+    stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=0,
+                                                      wavenumber=0,
+                                                      orient=0,
+                                                      contrast=C,
+                                                      patch_diameter=size)
+
+    assert stimulus(w=0*pq.Hz, kx=0/pq.deg, ky=0/pq.deg) == C * np.pi**2 * size**2 / 2
+
+    C = 1
+    size = 1*pq.deg
+    stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=2,
+                                                      wavenumber=0,
+                                                      orient=0,
+                                                      contrast=C,
+                                                      patch_diameter=size)
+    with pytest.raises(ValueError):
+        assert stimulus(w=0*pq.Hz, kx=0/pq.deg, ky=0/pq.deg) == 0
+
+    with pytest.warns(UserWarning):
+        stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=0,
+                                                          wavenumber=-2.345,
+                                                          orient=0,
+                                                          contrast=C,
+                                                          patch_diameter=size)
+    with pytest.raises(ValueError):
+        assert stimulus(w=0*pq.Hz, kx=0/pq.deg, ky=0/pq.deg) == 0
+
+    C = 1
+    size = 1*pq.deg
+    stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=0,
+                                                      wavenumber=4.3,
+                                                      orient=0,
+                                                      contrast=C,
+                                                      patch_diameter=size)
+
+    assert abs(stimulus(w=0*pq.Hz, kx=4.3/pq.deg, ky=0/pq.deg) - 2.2701277226799) < 1e-12
+
+    stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=3.1,
+                                                      wavenumber=4.3,
+                                                      orient=0,
+                                                      contrast=C,
+                                                      patch_diameter=size)
+
+    assert (abs(stimulus(w=[-3.1, 3.1]*pq.Hz, kx=4.3/pq.deg, ky=0/pq.deg) - [-0.0318182867085, 0.3979679193988]) < 1e-12).all()
+
+    with pytest.warns(UserWarning):
+        stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=-3.1,
+                                                          wavenumber=4.3,
+                                                          orient=0,
+                                                          contrast=C,
+                                                          patch_diameter=size)
+    assert (abs(stimulus(w=[-3.1, 3.1]*pq.Hz, kx=4.3/pq.deg, ky=0/pq.deg) - [-0.0318182867085, 0.3979679193988]) < 1e-12).all()
+
+    with pytest.warns(UserWarning):
+        stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=-3.1,
+                                                          wavenumber=4.3,
+                                                          orient=0,
+                                                          contrast=C,
+                                                          patch_diameter=size)
+    assert (abs(stimulus(w=[3.1, -3.1]*pq.Hz, kx=4.3/pq.deg, ky=0/pq.deg) - [0.3979679193988, -0.0318182867085]) < 1e-12).all()
+
+    with pytest.warns(UserWarning):
+        stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=-3.1,
+                                                          wavenumber=4.3,
+                                                          orient=0,
+                                                          contrast=C,
+                                                          patch_diameter=size)
+
+    assert (abs(stimulus(w=[3.1, -3.1]*pq.Hz, kx=4.3/pq.deg, ky=0/pq.deg) - [0.3979679193988, -0.0318182867085]) < 1e-12).all()
+
+    C = 2
+    size = 7*pq.deg
+    stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=3.1,
+                                                      wavenumber=4.3,
+                                                      orient=180,
+                                                      contrast=C,
+                                                      patch_diameter=size)
+
+    assert (abs(stimulus(w=[-3.1, 3.1]*pq.Hz, kx=-4.3/pq.deg, ky=0/pq.deg) - [-0.3274845723539, 39.0008561010789]) < 1e-12).all()
+
+
+def test_flashing_spot():
+    stimulus = pylgn.stimulus.create_flashing_spot(contrast=1,
+                                                   patch_diameter=2*pq.deg,
+                                                   delay=0*pq.ms,
+                                                   duration=2*pq.ms)
+
+    assert stimulus(t=0*pq.s, x=0*pq.deg, y=0*pq.deg) == 1
+    assert stimulus(t=3.5*pq.s, x=0.4*pq.deg, y=-0.3*pq.deg) == 0
+    assert stimulus(t=1.2*pq.s, x=2.30*pq.deg, y=-2.34*pq.deg) == 0
+
+    stimulus = pylgn.stimulus.create_flashing_spot(contrast=1.2,
+                                                   patch_diameter=10.5*pq.deg,
+                                                   delay=5,
+                                                   duration=2.4)
+
+    assert stimulus(t=0*pq.s, x=0*pq.deg, y=0*pq.deg) == 0
+    assert stimulus(t=3.5*pq.s, x=0.4*pq.deg, y=-0.3*pq.deg) == 0
+    assert stimulus(t=7.2*pq.ms, x=1.30*pq.deg, y=-0.34*pq.deg) == 1.2
+
+    with pytest.raises(ValueError):
+        stimulus = pylgn.stimulus.create_flashing_spot(contrast=1.2,
+                                                       patch_diameter=10.5*pq.deg,
+                                                       delay=-5*pq.ms,
+                                                       duration=2.4*pq.ms)
+
+    with pytest.raises(ValueError):
+        stimulus = pylgn.stimulus.create_flashing_spot(contrast=1.2,
+                                                       patch_diameter=10.5*pq.deg,
+                                                       delay=5*pq.ms,
+                                                       duration=-2.4*pq.ms)
+
+
+def test_flashing_spot_ft():
+    with pytest.raises(ValueError):
+        stimulus = pylgn.stimulus.create_flashing_spot_ft(contrast=1.2,
+                                                          patch_diameter=10.5*pq.deg,
+                                                          delay=-5*pq.ms,
+                                                          duration=2.4*pq.ms)
+
+    with pytest.raises(ValueError):
+        stimulus = pylgn.stimulus.create_flashing_spot_ft(contrast=1.2,
+                                                          patch_diameter=10.5*pq.deg,
+                                                          delay=5*pq.ms,
+                                                          duration=-2.4*pq.ms)
+
+
+def test_natural_image():
+    with pytest.raises(ValueError):
+            stimulus = pylgn.stimulus.create_natural_image("",
+                                                           delay=0*pq.ms,
+                                                           duration=-20*pq.ms)
+
+            stimulus = pylgn.stimulus.create_natural_image("",
+                                                           delay=-1*pq.ms,
+                                                           duration=-20*pq.ms)
+
+
+def test_natural_movie():
+    stimulus = pylgn.stimulus.create_natural_movie("test.gif")
+    
+    with pytest.raises(NameError):
+            stimulus = pylgn.stimulus.create_natural_movie("")

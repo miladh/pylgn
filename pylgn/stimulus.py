@@ -190,7 +190,6 @@ def create_patch_grating(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
     Both angular_freq and wavenumber are positive numbers.
     Use orientation to specify desired direction.
     """
-    # TODO: write test
     w_g, kx_g, ky_g = _convert_to_cartesian(angular_freq, wavenumber, orient)
     patch_diameter = patch_diameter if isinstance(patch_diameter, pq.Quantity) else patch_diameter * pq.deg
 
@@ -246,7 +245,6 @@ def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
     The combination of angular_freq, wavenumber, and orient should
     give w, kx, and ky that exist in function arguments in evaluate function.
     """
-    # TODO: write test
     w_g, kx_g, ky_g = _convert_to_cartesian(angular_freq, wavenumber, orient)
     patch_diameter = patch_diameter if isinstance(patch_diameter, pq.Quantity) else patch_diameter * pq.deg
 
@@ -276,8 +274,11 @@ def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
         arg_1 = dk_1 * patch_diameter * 0.5
         arg_2 = dk_2 * patch_diameter * 0.5
 
-        term_1 = np.where(arg_1 == 0, 1, 2 * first_kind_bessel(arg_1) / arg_1)
-        term_2 = np.where(arg_2 == 0, 1, 2 * first_kind_bessel(arg_2) / arg_2)
+        # NOTE: a runtime warning will arise since np.where evaluates the function
+        # in all points, including 0, and then proper final results are selected
+        with np.errstate(invalid='ignore'):
+            term_1 = np.where(arg_1 == 0, 1, 2 * first_kind_bessel(arg_1) / arg_1)
+            term_2 = np.where(arg_2 == 0, 1, 2 * first_kind_bessel(arg_2) / arg_2)
 
         return factor.magnitude * (term_1*kronecker_delta(w, w_g) + term_2*kronecker_delta(w, -w_g))
 
@@ -286,7 +287,6 @@ def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
 
 def create_flashing_spot(contrast=1, patch_diameter=1*pq.deg,
                          delay=0*pq.ms, duration=0*pq.ms):
-    # TODO write tests
     """
     Create flashing spot
 
@@ -297,6 +297,10 @@ def create_flashing_spot(contrast=1, patch_diameter=1*pq.deg,
         Contrast value
     patch_diameter : float/quantity scalar
         Patch size
+    delay : float/quantity scalar
+        onset time
+    duration : float/quantity scalar
+        duration of flashing spot
 
     Returns
     -------
@@ -304,6 +308,17 @@ def create_flashing_spot(contrast=1, patch_diameter=1*pq.deg,
         Evaluate function
 
     """
+    if delay < 0:
+        raise ValueError("delay must be a postive number: ".format(delay))
+
+    if duration < 0:
+        raise ValueError("duration must be a postive number: ".format(duration))
+
+    patch_diameter = patch_diameter if isinstance(patch_diameter, pq.Quantity) else patch_diameter * pq.deg
+
+    delay = delay if isinstance(delay, pq.Quantity) else delay * pq.ms
+    duration = duration if isinstance(duration, pq.Quantity) else duration * pq.ms
+
     def evaluate(t, x, y):
         """
         Evaluates flashing spot
@@ -339,6 +354,10 @@ def create_flashing_spot_ft(contrast=1, patch_diameter=1*pq.deg,
         Contrast value
     patch_diameter : float/quantity scalar
         Patch size
+    delay : float/quantity scalar
+        onset time
+    duration : float/quantity scalar
+        duration of flashing spot
 
     Returns
     -------
@@ -346,6 +365,15 @@ def create_flashing_spot_ft(contrast=1, patch_diameter=1*pq.deg,
         Evaluate function
 
     """
+    if delay < 0:
+        raise ValueError("delay must be a postive number: ".format(delay))
+
+    if duration < 0:
+        raise ValueError("duration must be a postive number: ".format(duration))
+
+    delay = delay if isinstance(delay, pq.Quantity) else delay * pq.ms
+    duration = duration if isinstance(duration, pq.Quantity) else duration * pq.ms
+
     def evaluate(w, kx, ky):
         """
         Evaluates Fourier transformed flashing spot function
@@ -389,10 +417,18 @@ def create_natural_image(filename, delay=0*pq.ms, duration=0*pq.ms):
     out : callable
         Evaluate function
     """
+    if delay < 0:
+        raise ValueError("delay must be a postive number: ".format(delay))
+
+    if duration < 0:
+        raise ValueError("duration must be a postive number: ".format(duration))
+
+    delay = delay if isinstance(delay, pq.Quantity) else delay * pq.ms
+    duration = duration if isinstance(duration, pq.Quantity) else duration * pq.ms
 
     def evaluate(t, x, y):
         """
-        Evaluates Fourier transformed patch grating function
+        converts image to numpy array
 
         Parameters
         ----------
@@ -434,10 +470,12 @@ def create_natural_movie(filename):
     out : callable
         Evaluate function
     """
+    if not filename.endswith('.gif'):
+        raise NameError("unsupported fomat. use '.gif'", filename)
 
     def evaluate(t, x, y):
         """
-        Evaluates Fourier transformed patch grating function
+        converts movie to numpy array
 
         Parameters
         ----------

@@ -1,8 +1,18 @@
 import numpy as np
-
+import pytest
 import pylgn
 import pylgn.kernels.spatial as spl
 import pylgn.kernels.temporal as tpl
+
+
+##############################################################
+# spatiotemporal
+##############################################################
+def test_non_separable_kernel():
+    non_sep = pylgn.kernels.create_non_separable_kernel()
+
+    with pytest.raises(NotImplementedError):
+        non_sep(0, 0, 0)
 
 
 ##############################################################

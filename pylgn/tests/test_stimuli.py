@@ -448,7 +448,7 @@ def test_natural_image():
             stimulus = pylgn.stimulus.create_natural_image("",
                                                            delay=0*pq.ms,
                                                            duration=-20*pq.ms)
-
+    with pytest.raises(ValueError):
             stimulus = pylgn.stimulus.create_natural_image("",
                                                            delay=-1*pq.ms,
                                                            duration=-20*pq.ms)

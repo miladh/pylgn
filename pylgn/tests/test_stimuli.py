@@ -3,7 +3,8 @@ import numpy as np
 import pytest
 
 import pylgn
-from pylgn.stimulus import _check_valid_orient, _convert_to_cartesian, _check_valid_spatial_freq, _check_valid_temporal_freq, create_fullfield_grating, create_fullfield_grating_ft, create_patch_grating, create_patch_grating_ft
+from pylgn.stimulus import (_check_valid_orient, _convert_to_cartesian,
+                            _check_valid_spatial_freq, _check_valid_temporal_freq)
 
 
 def test_check_valid_spatial_freq():
@@ -260,6 +261,19 @@ def test_fullfield_grating():
     assert abs(stimulus(t=1.2*pq.ms, x=2.30*pq.deg, y=-2.2*pq.deg) - -0.726845819863) < 1e-12
 
 
+def test_fullfield_grating_with_fft():
+    network = pylgn.Network()
+    integrator = network.create_integrator(nt=2, nr=7, dt=1*pq.ms, dr=0.1*pq.deg)
+    t, x, y = integrator.meshgrid()
+
+    stimulus = pylgn.stimulus.create_fullfield_grating(angular_freq=0,
+                                                       wavenumber=2,
+                                                       orient=33,
+                                                       contrast=1)
+    network.set_stimulus(stimulus, compute_fft=True)
+    assert(abs(integrator.compute_inverse_fft(network.stimulus.ft) - stimulus(t, x, y)) < 1e-12).all()
+
+
 def test_patch_grating():
     stimulus = pylgn.stimulus.create_patch_grating(angular_freq=0,
                                                    wavenumber=0,
@@ -442,6 +456,6 @@ def test_natural_image():
 
 def test_natural_movie():
     stimulus = pylgn.stimulus.create_natural_movie("test.gif")
-    
+
     with pytest.raises(NameError):
             stimulus = pylgn.stimulus.create_natural_movie("")

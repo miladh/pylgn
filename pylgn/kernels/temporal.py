@@ -231,21 +231,3 @@ def create_exp_decay_ft(tau, delay):
         return np.exp(1j * w * delay) / (1 - 1j * w * tau)
 
     return evaluate
-
-
-def create_doe_ft(tau_cen, tau_sur, delay):
-    def evaluate(w):
-        exp_factor = np.exp(1j * w * delay)
-        center = exp_factor / (1. - tau_cen * w * 1j)**2
-        surround = exp_factor / (1. - tau_sur * w * 1j)**2
-
-        return center - surround
-
-    return evaluate
-
-
-def create_poly_exp_decay_ft(tau, delay):
-    def evaluate(w):
-        return np.exp(1j * w * delay) * -1j * w.magnitude / (1 - 1j * w * tau)**3
-
-    return evaluate

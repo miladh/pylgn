@@ -17,7 +17,7 @@ def _check_valid_spatial_freq(kx_vec, ky_vec, kx_g, ky_g):
     ky_g = ky_g if isinstance(ky_g, pq.Quantity) else ky_g * ky_vec.units
 
     for k, k_vec in zip([kx_g, ky_g], [kx_vec, ky_vec]):
-        if not np.any(abs(k_vec - k) < epsilon):
+        if not np.any(abs(k_vec - k) < epsilon) and not np.any(abs(k_vec + k) < epsilon):
             raise ValueError("required freq ({}) doesn't exist in array. Use numerical integration instead".format(k))
 
 
@@ -263,7 +263,7 @@ def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
         out : ndarray
             Calculated values
         """
-        _check_valid_spatial_freq(kx, ky, kx_g, ky_g)
+        _check_valid_spatial_freq(kx, ky, kx_g, ky_g)  # TODO: is this necessary?
         _check_valid_temporal_freq(w, w_g)
 
         dw = abs(w.flatten()[1] - w.flatten()[0]) if isinstance(w, np.ndarray) and w.ndim > 0 else 1*pq.Hz

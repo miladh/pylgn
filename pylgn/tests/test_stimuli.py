@@ -264,7 +264,7 @@ def test_fullfield_grating():
 def test_fullfield_grating_with_fft():
     network = pylgn.Network()
     integrator = network.create_integrator(nt=2, nr=7, dt=1*pq.ms, dr=0.1*pq.deg)
-    t, x, y = integrator.meshgrid()
+    t, y, x = integrator.meshgrid()
 
     stimulus = pylgn.stimulus.create_fullfield_grating(angular_freq=0,
                                                        wavenumber=2,

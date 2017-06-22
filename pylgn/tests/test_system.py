@@ -36,7 +36,7 @@ def X(y, z, n):
 @pytest.mark.parametrize("delay_g", [1.34]*pq.ms)
 @pytest.mark.parametrize("w_id", [0])
 @pytest.mark.parametrize("k_id", [0])
-@pytest.mark.parametrize("orient", [0, 90]*pq.deg)
+@pytest.mark.parametrize("orient", [0, 90, 180, 270]*pq.deg)
 @pytest.mark.parametrize("C", [-56.3])
 @pytest.mark.parametrize("patch_diameter", [1, 5, 10]*pq.deg)
 @pytest.mark.parametrize("n", [4])
@@ -88,7 +88,7 @@ def test_G_patch_grating_response(nt, nr, dt, dr,
 @pytest.mark.parametrize("w_rg", [-1.2])
 @pytest.mark.parametrize("w_id", [0, 24])
 @pytest.mark.parametrize("k_id", [0, 8])
-@pytest.mark.parametrize("orient", [0, 90, 180]*pq.deg)
+@pytest.mark.parametrize("orient", [0, 90, 180, 270, 360]*pq.deg)
 @pytest.mark.parametrize("C", [1.23, -1.45])
 def test_G_R_C_grating_response(nt, nr, dt, dr,
                                 A_g, a_g, B_g, b_g, delay_g,
@@ -104,7 +104,7 @@ def test_G_R_C_grating_response(nt, nr, dt, dr,
     kx_g = k_g * np.cos(orient.rescale(pq.rad))
     ky_g = k_g * np.sin(orient.rescale(pq.rad))
 
-    t, x, y = integrator.meshgrid()
+    t, y, x = integrator.meshgrid()
 
     Wg_r = spl.create_dog_ft(A=A_g, a=a_g, B=B_g, b=b_g)
     Wg_t = tpl.create_delta_ft(delay=delay_g)

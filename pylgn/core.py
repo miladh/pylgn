@@ -116,7 +116,7 @@ class Integrator:
 
         Returns
         -------
-        out : t_vec, x_vec, y_vec: quantity arrays
+        out : t_vec, y_vec, x_vec: quantity arrays
             time, x, and y values.
 
         """
@@ -129,7 +129,7 @@ class Integrator:
 
         Returns
         -------
-        out : w_vec, kx_vec, ky_vec: quantity arrays
+        out : w_vec, ky_vec, kx_vec: quantity arrays
             temporal and spatial frequency values.
 
         """
@@ -358,12 +358,12 @@ class Network:
         """
         self.stimulus = Stimulus(closure)
         if not compute_fft:
-            w_vec, kx_vec, ky_vec = self.integrator.freq_meshgrid()
+            w_vec, ky_vec, kx_vec = self.integrator.freq_meshgrid()
             stimulus_ft = closure(w=w_vec, kx=kx_vec, ky=ky_vec)
             self.stimulus.ft = stimulus_ft
         else:
-            print("Calculating fft of stimulus...")
-            t_vec, x_vec, y_vec = self.integrator.meshgrid()
+            # print("Calculating fft of stimulus...")
+            t_vec, y_vec, x_vec = self.integrator.meshgrid()
             self.stimulus.ft = self.integrator.compute_fft(closure(t=t_vec,
                                                                    x=x_vec,
                                                                    y=y_vec))
@@ -400,7 +400,7 @@ class Network:
         neuron : pylgn.Neuron
         """
         neuron.irf_ft_is_computed = True
-        w_vec, kx_vec, ky_vec = self.integrator.freq_meshgrid()
+        w_vec, ky_vec, kx_vec = self.integrator.freq_meshgrid()
         neuron.irf_ft = neuron.evaluate_irf_ft(w_vec, kx_vec, ky_vec)
 
     def compute_response_ft(self, neuron, recompute_irf_ft=False):

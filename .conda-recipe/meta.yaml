@@ -20,13 +20,12 @@ requirements:
 
   run:
     - python
-    - setuptools
-    - numpy
-    - matplotlib
-    - scipy
-    - quantities
-    - h5py
-    - pillow
+    - setuptools 27.2
+    - numpy 1.12
+    - matplotlib 2.0
+    - scipy 0.19
+    - quantities 0.11.1
+    - pillow 4.1
 
 
 test:

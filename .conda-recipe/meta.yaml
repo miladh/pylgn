@@ -17,7 +17,6 @@ requirements:
     - quantities
     - h5py
     - pillow
-    - exdir
 
   run:
     - python
@@ -28,7 +27,6 @@ requirements:
     - quantities
     - h5py
     - pillow
-    - exdir
 
 
 test:

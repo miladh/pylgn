@@ -11,12 +11,11 @@ build:
 requirements:
   build:
     - python
-    - setuptools
-    - numpy
-    - matplotlib
-    - quantities
-    - h5py
-    - pillow
+    - setuptools 27.2
+    - numpy 1.12
+    - matplotlib 2.0
+    - quantities 0.11.1
+    - pillow 4.1
 
   run:
     - python

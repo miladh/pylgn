@@ -6,10 +6,7 @@ source:
   path: ..
 
 build:
-  script: 
-    # TODO remove this and add back quantities as conda package once its updated with the new numpy API
-    - pip install git+https://github.com/python-quantities/python-quantities.git
-    - python setup.py install
+  script: python setup.py install
 
 requirements:
   build:
@@ -17,14 +14,18 @@ requirements:
     - setuptools
     - numpy
     - matplotlib
+    - quantities
+    - h5py
     - pillow
 
   run:
     - python
     - setuptools
-    - numpy 
+    - numpy
     - matplotlib
     - scipy
+    - quantities
+    - h5py
     - pillow
 
 

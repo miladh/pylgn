@@ -15,8 +15,6 @@ script:
   - coverage report
   - source libs/travis-conda-scripts/scripts/config.sh
   - bash -ex libs/travis-conda-scripts/scripts/build.sh
-after_success:
-  - codecov
 deploy:
   - provider: script
     skip_cleanup: true

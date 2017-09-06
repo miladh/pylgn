@@ -20,7 +20,6 @@ requirements:
     - matplotlib
     - scipy
     - quantities ==0.12.0
-    - h5py
     - pillow
 
 

@@ -14,7 +14,6 @@ requirements:
     - setuptools
     - numpy
     - matplotlib
-    - quantities
     - h5py
     - pillow
 
@@ -24,7 +23,6 @@ requirements:
     - numpy
     - matplotlib
     - scipy
-    - quantities
     - h5py
     - pillow
 

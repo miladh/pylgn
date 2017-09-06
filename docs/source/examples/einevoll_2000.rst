@@ -8,12 +8,10 @@ In this script the summation curve for ganglion cell and relay cell is calculate
 .. figure:: ../../images/einevoll_2000.png
    :scale: 80 %
    :align: center
-  
+
    Area summation curve for OFF-center ganglion cell and relay cell with dark spot stimulus.
 
 The script creating this figure is shown below:
 
 .. literalinclude:: ../../../examples/einevoll_2000.py
     :language: python
-
- 

@@ -19,25 +19,25 @@ def test_non_separable_kernel():
 # spatial
 ##############################################################
 def test_spl_dog():
-    dog = spl.create_dog(A=1.0, a=0.25, B=0.85, b=0.83)
+    dog = spl.create_dog(A=1.0, a=0.25, B=0.85, b=0.83, dx=0, dy=0)
     assert abs(dog(x=0.5, y=0.1)--0.189791527743) < 1e-12
     assert abs(dog(x=1.2, y=1.9)--0.00025733892027) < 1e-12
 
 
 def test_spl_dog_ft():
-    dog_ft = spl.create_dog_ft(A=1.0, a=0.25, B=0.85, b=0.83)
+    dog_ft = spl.create_dog_ft(A=1.0, a=0.25, B=0.85, b=0.83, dx=0, dy=0)
     assert abs(dog_ft(kx=0.5, ky=1.1)-0.316423256919) < complex(1e-12, 0)
     assert abs(dog_ft(kx=1.5, ky=0.1)-0.389361200098) < complex(1e-12, 0)
 
 
 def test_spl_gauss():
-    gauss = spl.create_gauss(A=1, a=0.25)
+    gauss = spl.create_gauss(A=1, a=0.25, dx=0, dy=0)
     assert abs(gauss(x=0.5, y=0.1)-0.079488639761866486) < 1e-12
     assert(gauss(x=1.2, y=1.9) < 1e-12)
 
 
 def test_spl_gauss_ft():
-    gauss_ft = spl.create_gauss_ft(A=1, a=0.25)
+    gauss_ft = spl.create_gauss_ft(A=1, a=0.25, dx=0, dy=0)
     assert abs(gauss_ft(kx=0.5, ky=1.1)-0.9774457376685004) < complex(1e-12, 0)
     assert abs(gauss_ft(kx=1.5, ky=0.1)-0.96530371170877705) < complex(1e-12, 0)
 

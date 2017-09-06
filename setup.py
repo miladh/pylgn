@@ -15,5 +15,5 @@ setup(
     author_email='m@milad.no',
     license="GPLv3",
     packages=find_packages(),
-    include_package_data=True, 
+    include_package_data=True,
 )

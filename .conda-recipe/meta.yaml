@@ -12,19 +12,14 @@ requirements:
   build:
     - python
     - setuptools
-    - numpy
-    - matplotlib
-    - quantities
-    - h5py
-    - pillow
 
   run:
     - python
     - setuptools
-    - numpy
+    - numpy ==1.13
     - matplotlib
     - scipy
-    - quantities
+    - quantities ==0.12.0
     - h5py
     - pillow
 

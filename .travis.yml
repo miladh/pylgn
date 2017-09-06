@@ -8,11 +8,11 @@ install:
   - bash -ex libs/travis-conda-scripts/scripts/travis_install.sh
 before_script:
   # this is for running test coverage on travis
-  #- pip install pytest pyyaml coverage codecov quantities numpy matplotlib scipy # TODO: add this back
+  - pip install pytest pyyaml coverage codecov quantities numpy matplotlib scipy
   - python setup.py install
 script:
-  # - coverage run --source pylgn -m py.test -s 
-  # - coverage report
+  - coverage run --source pylgn -m py.test -s
+  - coverage report
   - source libs/travis-conda-scripts/scripts/config.sh
   - bash -ex libs/travis-conda-scripts/scripts/build.sh
 after_success:

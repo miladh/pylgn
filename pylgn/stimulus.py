@@ -427,6 +427,7 @@ def create_natural_image(filename, delay=0*pq.ms, duration=0*pq.ms):
     duration = duration if isinstance(duration, pq.Quantity) else duration * pq.ms
 
     def evaluate(t, x, y):
+        # TODO: fix normalization
         """
         converts image to numpy array
 
@@ -445,12 +446,13 @@ def create_natural_image(filename, delay=0*pq.ms, duration=0*pq.ms):
         im = Image.open(filename).convert("L").transpose(Image.FLIP_TOP_BOTTOM)
 
         Nt = t.shape[0]
-        Nx = x.shape[1]
-        Ny = y.shape[2]
+        Nx = x.shape[2]
+        Ny = y.shape[1]
 
-        stim = np.array(im.resize((Nx, Ny))) * (heaviside(t - delay) - heaviside(t - delay - duration))
-        stim = 2 * ((stim - stim.min()) / (stim.max() - stim.min())) - 1
+        stim = np.array(im.resize((Ny, Nx))) * (heaviside(t - delay) - heaviside(t - delay - duration))
 
+        if stim.max() - stim.min() != 0:
+            stim = 2 * ((stim - stim.min()) / (stim.max() - stim.min())) - 1
         return stim
 
     return evaluate
@@ -493,10 +495,10 @@ def create_natural_movie(filename):
         duration = im.info["duration"]*pq.ms if im.info["duration"] is not 0 else 30*pq.ms
 
         Nt = t.shape[0]
-        Nx = x.shape[1]
-        Ny = y.shape[2]
+        Nx = x.shape[2]
+        Ny = y.shape[1]
 
-        stim = np.zeros([Nt, Nx, Ny])
+        stim = np.zeros([Nt, Ny, Nx])
         t_map = (t.flatten().rescale("ms") / duration).astype(int)
         t_map = t_map[1:] - t_map[:-1]
         for i, ti in enumerate(t_map):
@@ -504,7 +506,7 @@ def create_natural_movie(filename):
                 im.seek(im.tell()+ti)
             except EOFError:
                 break
-            frame = im.convert("L").transpose(Image.FLIP_TOP_BOTTOM).resize((Nx, Ny))
+            frame = im.convert("L").transpose(Image.FLIP_TOP_BOTTOM).resize((Ny, Nx))
             stim[i, :, :] = np.array(frame)
             stim[i, :, :] = 2 * ((stim[i, :, :] - stim[i, :, :].min()) / (stim[i, :, :].max() - stim[i, :, :].min())) - 1
 

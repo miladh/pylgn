@@ -651,7 +651,7 @@ class Ganglion(Neuron):
 
         Parameters
         ----------
-        cube : func or tuple
+        kernel : func or tuple
              Fourier transformed kernel/
              tuple of Fourier transformed spatial
              and temporal kernel

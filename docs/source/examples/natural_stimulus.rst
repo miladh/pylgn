@@ -10,7 +10,7 @@ In this example a static image is shown in 80 ms after a 40 ms delay.
 .. literalinclude:: ../../../examples/natural_stimulus.py
     :language: python
 
-The response is shown below:
+The activation a layer of ganglion cells in response to the stimulus is below as heatmap from blue to red (low to high response).
 
 .. figure:: ../../images/natural_scene.gif
       :scale: 160 %

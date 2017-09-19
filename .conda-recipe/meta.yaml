@@ -19,7 +19,7 @@ requirements:
     - numpy ==1.13
     - matplotlib
     - scipy
-    - quantities ==0.12.0
+    - quantities ==0.12.1
     - pillow
 
 

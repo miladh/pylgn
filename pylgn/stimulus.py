@@ -49,7 +49,7 @@ def _convert_to_cartesian(angular_freq, wavenumber, orient):
     return angular_freq, kx, ky
 
 
-def create_fullfield_grating(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
+def create_fullfield_grating(angular_freq=0*pq.Hz, wavenumber=0/pq.deg,
                              orient=0*pq.deg, contrast=1):
     """
     Create full-field grating
@@ -99,7 +99,7 @@ def create_fullfield_grating(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
     return evaluate
 
 
-def create_fullfield_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
+def create_fullfield_grating_ft(angular_freq=0*pq.Hz, wavenumber=0/pq.deg,
                                 orient=0*pq.deg, contrast=1):
     """
     Create Fourier transformed full-field grating
@@ -160,7 +160,7 @@ def create_fullfield_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
     return evaluate
 
 
-def create_patch_grating(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
+def create_patch_grating(angular_freq=0*pq.Hz, wavenumber=0/pq.deg,
                          orient=0*pq.deg, contrast=1, patch_diameter=1*pq.deg):
     """
     Create patch grating
@@ -214,7 +214,7 @@ def create_patch_grating(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
     return evaluate
 
 
-def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0*pq.deg,
+def create_patch_grating_ft(angular_freq=0*pq.Hz, wavenumber=0/pq.deg,
                             orient=0*pq.deg, contrast=1, patch_diameter=1*pq.deg):
     """
     Create Fourier transformed patch grating

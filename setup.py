@@ -11,6 +11,7 @@ install_requires = []
 setup(
     name="pylgn",
     version=1.0,
+    url='http://pylgn.readthedocs.io/',
     author='Milad H. Mobarhan',
     author_email='m@milad.no',
     license="GPLv3",

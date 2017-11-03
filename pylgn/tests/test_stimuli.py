@@ -254,11 +254,12 @@ def test_fullfield_grating():
                                                            contrast=1.)
         assert abs(stimulus(t=2.1*pq.s, x=2.30*pq.deg, y=-2.2*pq.deg) - -0.522498564716) < 1e-12
 
-    stimulus = pylgn.stimulus.create_fullfield_grating(angular_freq=2.356194490192345*pq.kHz,
-                                                       wavenumber=-0.39269908169872414,
-                                                       orient=0,
-                                                       contrast=2.1)
-    assert abs(stimulus(t=1.2*pq.ms, x=2.30*pq.deg, y=-2.2*pq.deg) - -0.726845819863) < 1e-12
+    with pytest.warns(UserWarning):
+        stimulus = pylgn.stimulus.create_fullfield_grating(angular_freq=2.356194490192345*pq.kHz,
+                                                           wavenumber=-0.39269908169872414,
+                                                           orient=0,
+                                                           contrast=2.1)
+        assert abs(stimulus(t=1.2*pq.ms, x=2.30*pq.deg, y=-2.2*pq.deg) - -0.726845819863) < 1e-12
 
 
 def test_fullfield_grating_with_fft():
@@ -302,15 +303,15 @@ def test_patch_grating():
                                                        patch_diameter=8*pq.deg)
         assert abs(stimulus(t=2.1*pq.s, x=2.30*pq.deg, y=-2.2*pq.deg) - -0.522498564716) < 1e-12
         assert stimulus(t=1.2*pq.s, x=1.30*pq.deg, y=-7.34*pq.deg) == 0
+    with pytest.warns(UserWarning):
+        stimulus = pylgn.stimulus.create_patch_grating(angular_freq=2.356194490192345*pq.kHz,
+                                                       wavenumber=-0.39269908169872414,
+                                                       orient=0,
+                                                       contrast=2.1,
+                                                       patch_diameter=8*pq.deg)
 
-    stimulus = pylgn.stimulus.create_patch_grating(angular_freq=2.356194490192345*pq.kHz,
-                                                   wavenumber=-0.39269908169872414,
-                                                   orient=0,
-                                                   contrast=2.1,
-                                                   patch_diameter=8*pq.deg)
-
-    assert abs(stimulus(t=1.2*pq.ms, x=2.30*pq.deg, y=-2.2*pq.deg) - -0.726845819863) < 1e-12
-    assert stimulus(t=1.2*pq.s, x=1.30*pq.deg, y=-7.34*pq.deg) == 0
+        assert abs(stimulus(t=1.2*pq.ms, x=2.30*pq.deg, y=-2.2*pq.deg) - -0.726845819863) < 1e-12
+        assert stimulus(t=1.2*pq.s, x=1.30*pq.deg, y=-7.34*pq.deg) == 0
 
 
 def test_patch_grating_ft():

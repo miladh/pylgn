@@ -46,8 +46,8 @@ The complete code and a step-by-step explanation is given below:
           network.connect(ganglion, relay, (Krg_r, Krg_t))
 
           # create stimulus
-          k_g = integrator.spatial_freqs[3]
-          w_g = -integrator.temporal_freqs[1]
+          k_g = integrator.spatial_angular_freqs[3]
+          w_g = -integrator.temporal_angular_freqs[1]
           stimulus = pylgn.stimulus.create_fullfield_grating_ft(angular_freq=w_g,
                                                                 wavenumber=k_g,
                                                                 orient=0.0)
@@ -142,8 +142,8 @@ In this example we just take some values from the existing values:
 
 .. testcode::
 
-          k_g = integrator.spatial_freqs[3]
-          w_g = integrator.temporal_freqs[1]
+          k_g = integrator.spatial_angular_freqs[3]
+          w_g = integrator.temporal_angular_freqs[1]
           stimulus = pylgn.stimulus.create_fullfield_grating_ft(angular_freq=w_g,
                                                                 wavenumber=k_g,
                                                                 orient=0.0)

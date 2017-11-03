@@ -14,7 +14,7 @@ In this example figure 6 in `Einevoll et al. (2012) <http://link.springer.com/ar
     :language: python
 
 
-The response to patch-grating can be calculated using the same code with a small modification in stimulus: :code:`wavenumber=integrator.spatial_freqs[4]` which corresponds to wavenumber ~2.0/deg.
+The response to patch-grating can be calculated using the same code with a small modification in stimulus: :code:`wavenumber=integrator.spatial_angular_freqs[4]` which corresponds to wavenumber ~2.0/deg.
 
 .. figure:: ../../images/einevoll_2012_b.png
    :scale: 80 %

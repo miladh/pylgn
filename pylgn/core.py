@@ -62,8 +62,8 @@ class Integrator:
     ----------
     times
     positions
-    temporal_freqs
-    spatial_freqs
+    temporal_angular_freqs
+    spatial_angular_freqs
     Nt : int
          Number of spatial points.
     Nr : int
@@ -164,6 +164,19 @@ class Integrator:
         return self._r_vec
 
     @property
+    def temporal_angular_freqs(self):
+        """
+        Temporal angular frequency array
+
+        Returns
+        -------
+        out : quantity array
+            temporal angular frequencies
+
+        """
+        return self._w_vec.rescale(pq.kHz)
+
+    @property
     def temporal_freqs(self):
         """
         Temporal frequency array
@@ -174,7 +187,20 @@ class Integrator:
             temporal frequencies
 
         """
-        return self._w_vec.rescale(pq.kHz)
+        return self.temporal_angular_freqs / 2 / np.pi
+
+    @property
+    def spatial_angular_freqs(self):
+        """
+        Spatial angular frequency array
+
+        Returns
+        -------
+        out : quantity array
+            spatial angular frequencies
+
+        """
+        return self._k_vec
 
     @property
     def spatial_freqs(self):
@@ -187,7 +213,7 @@ class Integrator:
             spatial frequencies
 
         """
-        return self._k_vec
+        return self.spatial_angular_freqs / 2 / np.pi
 
     def compute_inverse_fft(self, cube):
         """

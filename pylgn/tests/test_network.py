@@ -38,7 +38,7 @@ def test_edog_patch_grating_response():
         network.connect(relay, cortical, (delta_s, delta_t), 1.0)
 
         for i, d in enumerate(patch_diameter):
-            stimulus = pylgn.stimulus.create_patch_grating_ft(wavenumber=integrator.spatial_freqs[4], patch_diameter=d)
+            stimulus = pylgn.stimulus.create_patch_grating_ft(wavenumber=integrator.spatial_angular_freqs[4], patch_diameter=d)
             network.set_stimulus(stimulus)
             network.compute_response(relay, recompute_ft=True)
             response[i, j] = relay.center_response[0]
@@ -108,7 +108,7 @@ def test_dog_patch_grating_response():
     network = pylgn.Network()
 
     integrator = network.create_integrator(nt=1, nr=7, dt=1*pq.ms, dr=0.1*pq.deg)
-    spatial_freqs = integrator.spatial_freqs[:k_max_id][::step]
+    spatial_angular_freqs = integrator.spatial_angular_freqs[:k_max_id][::step]
 
     Wg_t = tpl.create_delta_ft()
     Wg_r = spl.create_dog_ft(A=1, a=0.3*pq.deg, B=0.9, b=0.6*pq.deg)
@@ -116,7 +116,7 @@ def test_dog_patch_grating_response():
     ganglion = network.create_ganglion_cell(kernel=(Wg_r, Wg_t))
 
     for j, d in enumerate(patch_diameter):
-        for i, k_d in enumerate(spatial_freqs):
+        for i, k_d in enumerate(spatial_angular_freqs):
             stimulus = pylgn.stimulus.create_patch_grating_ft(wavenumber=k_d,
                                                               patch_diameter=d)
             network.set_stimulus(stimulus)

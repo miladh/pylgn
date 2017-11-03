@@ -8,6 +8,26 @@ import pylgn.kernels.spatial as spl
 import pylgn.kernels.temporal as tpl
 
 
+def test_freqs():
+    integrator = pylgn.Integrator(nt=1, nr=7, dt=1*pq.ms, dr=0.1*pq.deg)
+    assert (2*np.pi*integrator.spatial_freqs == integrator.spatial_angular_freqs).all()
+    assert (2*np.pi*integrator.temporal_freqs == integrator.temporal_angular_freqs).all()
+
+    assert(integrator.spatial_freqs.units == 1 / pq.deg)
+    assert(integrator.spatial_angular_freqs.units == 1 / pq.deg)
+    assert(integrator.temporal_freqs.units == pq.kHz)
+    assert(integrator.temporal_angular_freqs.units == pq.kHz)
+
+    integrator = pylgn.Integrator(nt=5, nr=5, dt=1*pq.ms, dr=2*pq.deg)
+    assert (integrator.spatial_freqs == integrator.spatial_angular_freqs/2/np.pi).all()
+    assert (integrator.temporal_freqs == integrator.temporal_angular_freqs/2/np.pi).all()
+
+    assert(integrator.spatial_freqs.units == 1 / pq.deg)
+    assert(integrator.spatial_angular_freqs.units == 1 / pq.deg)
+    assert(integrator.temporal_freqs.units == pq.kHz)
+    assert(integrator.temporal_angular_freqs.units == pq.kHz)
+
+
 @pytest.mark.core
 def test_core():
     dt = 5*pq.ms
@@ -47,8 +67,8 @@ def test_core():
     print(ganglion.annotations["kernel"], "\n")
 
     # create stimulus
-    k_g = integrator.spatial_freqs[2]
-    w_g = -integrator.temporal_freqs[40]
+    k_g = integrator.spatial_angular_freqs[2]
+    w_g = -integrator.temporal_angular_freqs[40]
     # stimulus = pylgn.stimulus.create_patch_grating_ft(angular_freq=w_g,
     #                                                   wavenumber=k_g,
     #                                                   orient=0.0,

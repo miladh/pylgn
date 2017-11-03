@@ -47,8 +47,8 @@ def test_G_patch_grating_response(nt, nr, dt, dr,
     network = pylgn.Network()
     integrator = network.create_integrator(nt=nt, nr=nr, dt=dt, dr=dr)
 
-    w_g = integrator.temporal_freqs[w_id].rescale(1./pq.ms)
-    k_g = integrator.spatial_freqs[k_id]
+    w_g = integrator.temporal_angular_freqs[w_id].rescale(1./pq.ms)
+    k_g = integrator.spatial_angular_freqs[k_id]
 
     Wg_r = spl.create_dog_ft(A=A_g, a=a_g, B=B_g, b=b_g)
     Wg_t = tpl.create_delta_ft(delay=delay_g)
@@ -99,8 +99,8 @@ def test_G_R_C_grating_response(nt, nr, dt, dr,
     network = pylgn.Network()
     integrator = network.create_integrator(nt=nt, nr=nr, dt=dt, dr=dr)
 
-    w_g = integrator.temporal_freqs[w_id].rescale(1./pq.ms)
-    k_g = integrator.spatial_freqs[k_id]
+    w_g = integrator.temporal_angular_freqs[w_id].rescale(1./pq.ms)
+    k_g = integrator.spatial_angular_freqs[k_id]
     kx_g = k_g * np.cos(orient.rescale(pq.rad))
     ky_g = k_g * np.sin(orient.rescale(pq.rad))
 

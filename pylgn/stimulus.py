@@ -389,13 +389,18 @@ def create_flashing_spot_ft(contrast=1, patch_diameter=1*pq.deg,
         out : ndarray
             Calculated values
         """
+        factor = contrast * patch_diameter.magnitude**2 * np.pi / 4
         arg = np.sqrt(kx**2 + ky**2) * patch_diameter * 0.5
-        spatial = np.where(arg == 0, 1, 2 * first_kind_bessel(arg) / arg)
+
+        # NOTE: a runtime warning will arise since np.where evaluates the function
+        # in all points, including 0, and then proper final results are selected
+        with np.errstate(invalid='ignore'):
+            spatial = np.where(arg == 0, 1, 2 * first_kind_bessel(arg) / arg)
 
         half_duration = duration.rescale(1/w.units) / 2
         temporal = np.sinc(w * half_duration / np.pi) * np.exp(1j * w * (delay + half_duration))
 
-        return half_duration.magnitude * patch_diameter.magnitude**2 * temporal * spatial
+        return factor * duration.magnitude * temporal * spatial
 
     return evaluate
 

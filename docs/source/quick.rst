@@ -62,7 +62,7 @@ The complete code and a step-by-step explanation is given below:
 
 Create network
 ''''''''''''''
-First step is to import pylgn, including the spatial and temporal kernels, and create a network:
+First step is to import pyLGN, including the spatial and temporal kernels, and create a network:
 
 .. testcode::
 

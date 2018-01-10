@@ -16,7 +16,7 @@ requirements:
   run:
     - python
     - setuptools
-    - numpy ==1.13
+    - numpy
     - matplotlib
     - scipy
     - quantities ==0.12.1

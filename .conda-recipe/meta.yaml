@@ -22,10 +22,9 @@ requirements:
     - quantities ==0.12.1
     - pillow
 
-
 test:
   source_files:
-    - pylgn/tests
+    - pylgn
     - docs
     - examples
   requires:

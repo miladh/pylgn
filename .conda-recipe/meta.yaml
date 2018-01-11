@@ -31,10 +31,14 @@ test:
   requires:
     - pytest
     - sphinx
+    - coverage
+    - codecov
   imports:
     - pylgn
   commands:
-    - pytest -s
+    - coverage run --source pylgn -m py.test -s
+    - coverage report
+    - codecov
     - cd docs ; make doctest
 
 about:

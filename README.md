@@ -11,3 +11,15 @@
 pylgn is a visual stimulus-driven simulator of spatiotemporal cell responses in the early part of the visual system consisting of the retina, lateral geniculate nucleus (LGN) and primary visual cortex. The model behind is a linear mechanistic, firing rate model that incorporates the influence of thalamocortical loops, in addition to the feedforward responses. The advantage of the simulator lies in its computational and conceptual ease, allowing for fast and comprehensive exploration of various scenarios for the organization of the cortical feedback.
 
 [Documentation](http://pylgn.readthedocs.io/)
+
+
+
+## Dependencies
+
+- python >=3.5
+- matplotlib
+- numpy
+- scipy
+- setuptools
+- pillow
+- quantities 0.12.1

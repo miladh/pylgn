@@ -6,7 +6,7 @@ fi
 if [ $TRAVIS_TEST_RESULT -eq 0 ]; then
     LABEL=${2:-main}
 
-    for TARBALL in $BUILD_OUTPUT/{noarch}-*/*.tar.bz2; do
+    for TARBALL in $BUILD_OUTPUT/noarch/*.tar.bz2; do
         echo "Uploading $TARBALL to anaconda with anaconda upload..."
         set +x # hide token
         anaconda -t "$CONDA_UPLOAD_TOKEN" upload -u "$1" --force "$TARBALL" -l "$LABEL"

@@ -6,6 +6,7 @@ source:
   path: ..
 
 build:
+  noarch: python
   script: python setup.py install
 
 requirements:
@@ -22,19 +23,22 @@ requirements:
     - quantities ==0.12.1
     - pillow
 
-
 test:
   source_files:
-    - pylgn/tests
+    - pylgn
     - docs
     - examples
   requires:
     - pytest
     - sphinx
+    - coverage
+    - codecov
   imports:
     - pylgn
   commands:
-    - pytest -s
+    - coverage run --source pylgn -m py.test -s
+    - coverage report
+    - codecov
     - cd docs ; make doctest
 
 about:

@@ -4,7 +4,6 @@ if [ -z "$1" ]; then
     exit
 fi
 if [ $TRAVIS_TEST_RESULT -eq 0 ]; then
-    cd packages
     LABEL=${2:-main}
 
     for TARBALL in $BUILD_OUTPUT/{noarch}-*/*.tar.bz2; do
@@ -13,7 +12,6 @@ if [ $TRAVIS_TEST_RESULT -eq 0 ]; then
         anaconda -t "$CONDA_UPLOAD_TOKEN" upload -u "$1" --force "$TARBALL" -l "$LABEL"
         set -x
     done
-    cd ..
     echo "Upload command complete!"
 else
     echo "Upload cancelled due to failed test."

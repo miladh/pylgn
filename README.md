@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/miladh/pylgn.svg?branch=0.9)](https://travis-ci.org/miladh/pylgn)
+[![Build Status](https://travis-ci.org/miladh/pylgn.svg?branch=dev)](https://travis-ci.org/miladh/pylgn)
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Anaconda-Server Badge](https://anaconda.org/cinpla/pylgn/badges/installer/conda.svg)](https://anaconda.org/cinpla/pylgn)
 [![Documentation Status](https://readthedocs.org/projects/pylgn/badge/?version=latest)](http://pylgn.readthedocs.io/en/latest/?badge=latest)
-[![codecov](https://codecov.io/gh/miladh/pylgn/branch/0.9/graph/badge.svg)](https://codecov.io/gh/miladh/pylgn)
+[![codecov](https://codecov.io/gh/miladh/pylgn/branch/dev/graph/badge.svg)](https://codecov.io/gh/miladh/pylgn)
 
 
 

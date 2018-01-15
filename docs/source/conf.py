@@ -80,7 +80,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'pylgn'
+project = 'pyLGN'
 copyright = '2017, Milad H. Mobarhan'
 author = 'Milad H. Mobarhan'
 
@@ -161,7 +161,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'pylgn.tex', 'pylgn Documentation',
+    (master_doc, 'pylgn.tex', 'pyLGN Documentation',
      'Milad H. Mobarhan', 'manual'),
 ]
 
@@ -171,7 +171,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'pylgn', 'pylgn Documentation',
+    (master_doc, 'pyLGN', 'pyLGN Documentation',
      [author], 1)
 ]
 
@@ -182,8 +182,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'pylgn', 'pylgn Documentation',
-     author, 'pylgn', 'One line description of project.',
+    (master_doc, 'pyLGN', 'pyLGN Documentation',
+     author, 'pyLGN', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -301,6 +301,31 @@ class Network:
         self.integrator = Integrator(nt, nr, dt, dr)
         return self.integrator
 
+    def create_descriptive_neuron(self, background_response=0/pq.s, kernel=None,
+                                  annotations={}):
+        """
+        Create descriptive neuron
+
+        Parameters
+        ----------
+        background_response : quantity scalar
+            Background activity.
+        kernel : function
+            Impulse-response function.
+        annotations : dict
+            Dictionary with various annotations.
+
+        Returns
+        -------
+        out : pylgn.DescriptiveNeuron
+            Descriptive neuron object
+        """
+        neuron = DescriptiveNeuron(background_response=background_response,
+                                   kernel=kernel, annotations=annotations)
+        self.neurons.append(neuron)
+
+        return neuron
+
     def create_ganglion_cell(self, background_response=0/pq.s, kernel=None,
                              annotations={}):
         """
@@ -642,6 +667,52 @@ class Neuron(ABC):
         """
         idx = int(self.response.shape[1] / 2)
         return np.real(self.response[:, idx, idx])
+
+
+class DescriptiveNeuron(Neuron):
+    def __init__(self, background_response, kernel, annotations={}):
+        """
+        Descriptive neuron constructor
+
+        Parameters
+        ----------
+        background_response : quantity scalar
+            Background activity.
+        kernel : function
+            Impulse-response function.
+        annotations : dict
+            Dictionary with various annotations.
+        """
+        super().__init__(background_response, annotations)
+        self.set_kernel(kernel)
+
+    def _check_if_connection_is_allowed(self, neuron):
+        raise TypeError("Descriptive cells cannot receive connection")
+
+    def evaluate_irf_ft(self, w, kx, ky):
+        """
+        Evaluates the Fourier transform of
+        impulse-response function
+        """
+        return self.kernel(w, kx, ky)
+
+    def set_kernel(self, kernel):
+        """
+        Set the impulse-response function.
+
+        Parameters
+        ----------
+        kernel : func or tuple
+             Fourier transformed kernel/
+             tuple of Fourier transformed spatial
+             and temporal kernel
+        """
+        if isinstance(kernel, tuple):
+            self.kernel = _unpack_kernel_tuple(kernel)
+        else:
+            self.kernel = kernel
+
+        self.annotations["kernel"] = closure_params(self.kernel)
 
 
 class Ganglion(Neuron):

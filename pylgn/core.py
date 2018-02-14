@@ -312,6 +312,8 @@ class Network:
             Background activity.
         kernel : function
             Impulse-response function.
+        annotations : dict
+            Dictionary with various annotations.
 
         Returns
         -------
@@ -332,6 +334,8 @@ class Network:
         ----------
         background_response : quantity scalar
             Background activity.
+        annotations : dict
+            Dictionary with various annotations.
 
         Returns
         -------
@@ -356,6 +360,8 @@ class Network:
         ----------
         background_response : quantity scalar
             Background activity.
+        annotations : dict
+            Dictionary with various annotations.
 
         Returns
         -------
@@ -525,11 +531,10 @@ class Stimulus:
         self.ft = None
         self.closure = closure
 
+
 ##############################################################
 # Neuron classes
 ##############################################################
-
-
 class Neuron(ABC):
     """
     Neuron base class.
@@ -651,6 +656,8 @@ class Ganglion(Neuron):
             Background activity.
         kernel : function
             Impulse-response function.
+        annotations : dict
+            Dictionary with various annotations.
         """
         from .kernels.spatial import create_dog_ft
         from .kernels.temporal import create_delta_ft
@@ -699,6 +706,9 @@ class Relay(Neuron):
         ----------
         background_response : quantity scalar
             Background activity.
+
+        annotations : dict
+            Dictionary with various annotations.
         """
         super().__init__(background_response, annotations)
 
@@ -740,6 +750,9 @@ class Cortical(Neuron):
         ----------
         background_response : quantity scalar
             Background activity.
+
+        annotations : dict
+            Dictionary with various annotations.
         """
         super().__init__(background_response, annotations)
 

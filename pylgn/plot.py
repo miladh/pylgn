@@ -7,6 +7,9 @@ import matplotlib.animation as animation
 
 
 class MidpointNormalize(colors.Normalize):
+    """
+    https://matplotlib.org/gallery/userdemo/colormap_normalizations.html
+    """
     def __init__(self, vmin=None, vmax=None, midpoint=None, clip=False):
         self.midpoint = midpoint
         colors.Normalize.__init__(self, vmin, vmax, clip)
@@ -16,10 +19,35 @@ class MidpointNormalize(colors.Normalize):
         return np.ma.masked_array(np.interp(value, x, y))
 
 
-def animate_cube(cube, title=None, dt=None, save_anim=False):
+def animate_cube(cube, title=None, dt=None, 
+                 vmin=None, vmax=None, cmap="RdBu_r",
+                 save_anim=False, filename="anim.mp4", writer="ffmpeg"):
+    """
+    Animates 3d array
+
+    Parameters
+    ----------
+    cube : quantity array/array_like
+        input array (Nt x Nx x Ny) 
+        
+    title : str, optional
+    
+    dt : quantity scalar, optional
+    
+    vmin : quantity scalar/float, optional
+    
+    vmin : quantity scalar/float, optional
+        
+    save_anim : bool, optional
+    
+    filename : str, optional
+    
+    writer : str, optional
+     
+    """    
     fig = plt.figure()
-    vmin = cube.min()
-    vmax = cube.max()
+    vmin = vmin or cube.min()
+    vmax = vmax or cube.max()
     plt.title("") if title is None else plt.title(title)
 
     def init():
@@ -35,7 +63,7 @@ def animate_cube(cube, title=None, dt=None, save_anim=False):
 
     ttl = plt.suptitle("")
     im = plt.imshow(cube[0, :, :], animated=True, vmin=vmin, vmax=vmax,
-                    origin="lower", cmap="RdBu_r",
+                    origin="lower", cmap=cmap,
                     norm=MidpointNormalize(midpoint=0.))
 
     plt.tight_layout()
@@ -47,5 +75,5 @@ def animate_cube(cube, title=None, dt=None, save_anim=False):
 
     plt.colorbar()
     if save_anim:
-        anim.save('im.mp4', writer="ffmpeg")
+        anim.save(filename, writer=writer)
     plt.show()

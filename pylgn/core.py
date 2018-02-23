@@ -413,13 +413,20 @@ class Network:
             the Fourier transform of the stimulus.
 
         """
+        from inspect import getargspec
+
         self.stimulus = Stimulus(closure)
+        closure_args = getargspec(closure).args
+
         if not compute_fft:
+            if not all(arg in ("w", "kx", "ky") for arg in closure_args):
+                raise TypeError("Fourier transformed stimulus closure should have w, kx, and ky as arguments, not {}".format(closure_args))
             w_vec, ky_vec, kx_vec = self.integrator.freq_meshgrid()
             stimulus_ft = closure(w=w_vec, kx=kx_vec, ky=ky_vec)
             self.stimulus.ft = stimulus_ft
         else:
-            # print("Calculating fft of stimulus...")
+            if not all(arg in ("t", "x", "y") for arg in closure_args):
+                raise TypeError("Stimulus closure should have t, x, and y as arguments, not {} for computing FFT".format(closure_args))
             t_vec, y_vec, x_vec = self.integrator.meshgrid()
             self.stimulus.ft = self.integrator.compute_fft(closure(t=t_vec,
                                                                    x=x_vec,

@@ -398,8 +398,7 @@ def create_flashing_spot_ft(contrast=1, patch_diameter=1*pq.deg,
             spatial = np.where(arg == 0, 1, 2 * first_kind_bessel(arg) / arg)
 
         half_duration = duration.rescale(1/w.units) / 2
-        temporal = np.sinc(w * half_duration / np.pi) * np.exp(1j * w * (delay + half_duration))
-
+        temporal = np.sinc(w * half_duration / np.pi) * np.exp(1j * w * (delay+half_duration).rescale(1/w.units))
         return factor * duration.magnitude * temporal * spatial
 
     return evaluate

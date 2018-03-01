@@ -443,6 +443,23 @@ def test_flashing_spot_ft():
                                                           delay=5*pq.ms,
                                                           duration=-2.4*pq.ms)
 
+    contrast = 2.3
+    size = 8.*pq.deg
+    delay = 20*pq.ms
+    duration = 100*pq.ms
+    spatial_origo = contrast * np.pi * size**2 / 4
+
+    stimulus = pylgn.stimulus.create_flashing_spot_ft(contrast=contrast,
+                                                      patch_diameter=size,
+                                                      delay=delay,
+                                                      duration=duration)
+    # origo
+    assert stimulus(w=0*pq.Hz, kx=0/pq.deg, ky=0/pq.deg) == (spatial_origo * duration).magnitude
+
+    # zeros
+    for i in range(1, 50):
+        assert abs(stimulus(w=i*2*np.pi/duration, kx=0/pq.deg, ky=0/pq.deg) - 1j*0) < 1e-10
+
 
 def test_natural_image():
     with pytest.raises(ValueError):

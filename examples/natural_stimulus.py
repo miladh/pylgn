@@ -17,7 +17,7 @@ Wg_t = tpl.create_biphasic_ft()
 ganglion = network.create_ganglion_cell(kernel=(Wg_r, Wg_t))
 
 # create stimulus
-stimulus = pylgn.stimulus.create_natural_image(filename="natural_scene.png",
+stimulus = pylgn.stimulus.create_natural_image(filenames="natural_scene.png",
                                                delay=40*pq.ms,
                                                duration=80*pq.ms)
 network.set_stimulus(stimulus, compute_fft=True)

@@ -404,14 +404,14 @@ def create_flashing_spot_ft(contrast=1, patch_diameter=1*pq.deg,
     return evaluate
 
 
-def create_natural_image(filename, delay=0*pq.ms, duration=0*pq.ms):
+def create_natural_image(filenames, delay=0*pq.ms, duration=0*pq.ms):
     """
     Creates natural image stimulus
 
     Parameters
     ----------
-    filename : string
-        path to image
+    filenames : list/string
+        path to image(s)
     delay : quantity scalar
         Onset time
     duration : quantity scalar
@@ -421,6 +421,10 @@ def create_natural_image(filename, delay=0*pq.ms, duration=0*pq.ms):
     out : callable
         Evaluate function
     """
+
+    if isinstance(filenames, str):
+        filenames = [filenames]
+
     if delay < 0:
         raise ValueError("delay must be a postive number: ".format(delay))
 
@@ -447,13 +451,17 @@ def create_natural_image(filename, delay=0*pq.ms, duration=0*pq.ms):
             Calculated values
         """
         from PIL import Image
-        im = Image.open(filename).convert("L").transpose(Image.FLIP_TOP_BOTTOM)
 
         Nt = t.shape[0]
         Nx = x.shape[2]
         Ny = y.shape[1]
+        stim = np.zeros([Nt, Nx, Ny])
 
-        stim = np.array(im.resize((Ny, Nx))) * (heaviside(t - delay) - heaviside(t - delay - duration))
+        for i, filename in enumerate(filenames):
+            im = Image.open(filename).convert("L").transpose(Image.FLIP_TOP_BOTTOM)
+            t_start = delay + i * (delay + duration)
+            t_stop = (i+1) * (duration + delay)
+            stim += np.array(im.resize((Ny, Nx))) * (heaviside(t - t_start) - heaviside(t - t_stop))
 
         if stim.max() - stim.min() != 0:
             stim = 2 * ((stim - stim.min()) / (stim.max() - stim.min())) - 1

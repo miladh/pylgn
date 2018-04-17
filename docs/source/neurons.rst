@@ -33,8 +33,8 @@ Cortical class
   :undoc-members:
 
 
-  DescriptiveNeuron class
-  '''''''''''''''''''''''
-   .. autoclass:: pylgn.core.DescriptiveNeuron
-      :members:
-      :undoc-members:
+DescriptiveNeuron class
+'''''''''''''''''''''''
+.. autoclass:: pylgn.core.DescriptiveNeuron
+   :members:
+   :undoc-members:

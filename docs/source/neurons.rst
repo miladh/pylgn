@@ -15,19 +15,26 @@ Neuron
 Ganglion class
 ''''''''''''''
  .. autoclass:: pylgn.core.Ganglion
-    :members: 
+    :members:
     :undoc-members:
 
 
 Relay class
 '''''''''''
 .. autoclass:: pylgn.core.Relay
-   :members: 
+   :members:
    :undoc-members:
 
 
 Cortical class
 ''''''''''''''
 .. autoclass:: pylgn.Cortical
-  :members: 
+  :members:
   :undoc-members:
+
+
+  DescriptiveNeuron class
+  '''''''''''''''''''''''
+   .. autoclass:: pylgn.core.DescriptiveNeuron
+      :members:
+      :undoc-members:

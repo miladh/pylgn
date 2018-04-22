@@ -19,7 +19,7 @@ class MidpointNormalize(colors.Normalize):
         return np.ma.masked_array(np.interp(value, x, y))
 
 
-def animate_cube(cube, title=None, dt=None, 
+def animate_cube(cube, title=None, dt=None,
                  vmin=None, vmax=None, cmap="RdBu_r",
                  save_anim=False, filename="anim.mp4", writer="ffmpeg"):
     """
@@ -28,23 +28,23 @@ def animate_cube(cube, title=None, dt=None,
     Parameters
     ----------
     cube : quantity array/array_like
-        input array (Nt x Nx x Ny) 
-        
+        input array (Nt x Nx x Ny)
+
     title : str, optional
-    
-    dt : quantity scalar, optional
-    
-    vmin : quantity scalar/float, optional
-    
-    vmin : quantity scalar/float, optional
-        
-    save_anim : bool, optional
-    
-    filename : str, optional
-    
-    writer : str, optional
-     
-    """    
+
+    dt : quantity scalar, optional, default: None
+
+    vmin : quantity scalar/float, optional, default: cube.min()
+
+    vmin : quantity scalar/float, optional, default: cube.max()
+
+    save_anim : bool, optional, default: False
+
+    filename : str, optional, default: "anim.mp4"
+
+    writer : str, optional, default: "ffmpeg"
+
+    """
     fig = plt.figure()
     vmin = vmin or cube.min()
     vmax = vmax or cube.max()
@@ -58,7 +58,8 @@ def animate_cube(cube, title=None, dt=None,
     def animate(j):
         im.set_data(cube[j, :, :])
         ttl.set_text("Frame = " + str(j)) if dt is None \
-            else ttl.set_text("Time = " + str('%.1f' % (j*dt.magnitude,)) + str(dt.units).split(" ")[-1])
+            else ttl.set_text("Time = {} {}".format(round(j*dt.magnitude, 2), 
+                                                    dt.dimensionality))
         return im, ttl
 
     ttl = plt.suptitle("")

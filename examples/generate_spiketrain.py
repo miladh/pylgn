@@ -35,10 +35,6 @@ rates = tls.scale_rates(rates, 60*pq.Hz)
 spike_trains = tls.generate_spike_train(rates, integrator.times)
 
 # visulize
-pylgn.plot.animate_cube(rates,
-                        title="Ganglion cell responses",
-                        dt=integrator.dt.rescale("ms"))
-
 pylgn.plot.animate_spike_activity(spike_trains,
                                   times=integrator.times,
                                   positions=integrator.positions,

@@ -78,3 +78,78 @@ def animate_cube(cube, title=None, dt=None,
     if save_anim:
         anim.save(filename, writer=writer)
     plt.show()
+
+
+def animate_spike_activity(data, times, positions, title=None, 
+                           marker="o", marker_size=10, marker_color="C0",
+                           save_anim=False, filename="anim.mp4", writer="ffmpeg"):
+
+    """
+    Animates spike activity
+
+    Parameters
+    ----------
+    data : array_like
+        input array (Nx x Ny x N_spikes)
+
+    times : quantity array
+    
+    positions : quantity array
+    
+    title : str, optional
+    
+    marker : MarkerStyle, optional, default: 'o'
+        marker style
+
+    marker_size : float, optional, default: 10
+        marker size
+
+    marker_color : color, sequence, or sequence of color, optional, default: 'C0'
+        marker color
+
+    save_anim : bool, optional, default: False
+
+    filename : str, optional, default: "anim.mp4"
+
+    writer : str, optional, default: "ffmpeg"
+
+    """
+    fig, ax = plt.subplots(1)
+    ax.set_xlabel("x (deg)")
+    ax.set_ylabel("y (deg)")
+    plt.title("") if title is None else plt.title(title)
+
+    Nx, Ny = data.shape
+    cube = np.zeros([times.shape[0], Nx, Ny])
+    
+    x, y = np.meshgrid(positions, positions)
+    dt = times[1] - times[0]
+
+    for m in range(Nx):
+        for n in range(Ny):
+            ids = np.round(data[m, n][:] / dt).astype(int).magnitude
+            for i in ids:
+                cube[i, m, n] = marker_size
+
+    def init():
+        scat.set_sizes(cube[0, :, :].flatten())
+        ttl.set_text("")
+        return scat, ttl
+
+    def animate(j):
+        scat.set_sizes(cube[j, :, :].flatten())
+        ttl.set_text("Time = {} {}".format(round(j*dt.magnitude, 2), 
+                                           dt.dimensionality))
+        return scat, ttl
+    
+    ttl = plt.suptitle("")
+    scat = plt.scatter(x=x, y=y, s=cube[0, :, :], 
+                       marker=marker, c=marker_color)
+
+    anim = animation.FuncAnimation(fig, animate, init_func=init,
+                                   frames=cube.shape[0], interval=100,
+                                   repeat=True, repeat_delay=1000)
+
+    if save_anim:
+        anim.save(filename, writer=writer)
+    plt.show()

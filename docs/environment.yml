@@ -2,5 +2,10 @@ channels:
   - conda-forge
   - cinpla
 dependencies:
-  - pylgn
-  - python=3.5
+  - python
+  - setuptools
+  - numpy
+  - matplotlib
+  - scipy
+  - quantities ==0.12.1
+  - pillow

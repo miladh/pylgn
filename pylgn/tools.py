@@ -9,25 +9,25 @@ def heaviside_nonlinearity(rates):
     Parameters
     ----------
     rates : quantity array
-    
+
     Returns
     -------
     out : quantity array
     """
     return rates.clip(min=0*rates.units)
-    
+
 
 def scale_rates(rates, target_population_rate=60.*pq.Hz):
     """
-    Scales the rates to match a target 
+    Scales the rates to match a target
     mean population rate
 
     Parameters
     ----------
     rates : quantity array
-    
+
     target_population_rate : quantity array
-    
+
     Returns
     -------
     out : quantity array
@@ -37,7 +37,7 @@ def scale_rates(rates, target_population_rate=60.*pq.Hz):
         raise ValueError("target population rate should be positive")
     if not rates.units == target_population_rate.units:
         raise AttributeError("rates (unit: {}) and target rate (unit: {}) must have same unit".format(rates.units, target_population_rate.units))
-        
+
     rates *= target_population_rate / np.mean(rates)
     return rates
 
@@ -45,10 +45,12 @@ def scale_rates(rates, target_population_rate=60.*pq.Hz):
 def nonstationary_poisson(times, rate):
     """
     Non-stationary Poisson process
+
+    Implemented by Alexander Stasik (a.j.stasik@fys.uio.no)
     """
     n_exp = (rate.max() * (times.max()-times.min())).simplified
-    t_events = np.sort(np.random.uniform(times.min(), 
-                                         times.max(), 
+    t_events = np.sort(np.random.uniform(times.min(),
+                                         times.max(),
                                          np.random.poisson(n_exp)))
     mask = np.digitize(t_events, times)
     ratio = rate[mask] / rate.max()
@@ -65,9 +67,9 @@ def generate_spike_train(data, times):
     ----------
     data : quantity array
         rates (N_spikes X Nx X Ny)
-    
+
     times : quantity array
-    
+
     Returns
     -------
     spike_trains : array_like
@@ -75,9 +77,9 @@ def generate_spike_train(data, times):
     """
     Nx, Ny = data.shape[1:]
     spike_trains = np.zeros([Nx, Ny], dtype=object)
-    
+
     for i in range(Nx):
         for j in range(Ny):
             spike_trains[i, j] = nonstationary_poisson(times, data[:, i, j]) * times.units
-            
+
     return spike_trains

@@ -30,7 +30,7 @@ test:
     - examples
   requires:
     - pytest
-    - sphinx
+    - sphinx ==1.7.2
     - coverage
     - codecov
   imports:

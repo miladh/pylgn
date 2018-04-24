@@ -1,11 +1,10 @@
 channels:
   - conda-forge
-  - cinpla
 dependencies:
   - python
   - setuptools
   - numpy
   - matplotlib
   - scipy
-  - quantities ==0.12.1
+  - quantities=0.12.1
   - pillow

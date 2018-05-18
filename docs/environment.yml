@@ -8,4 +8,3 @@ dependencies:
   - scipy
   - quantities=0.12.1
   - pillow
-  - sphinx=1.7.2

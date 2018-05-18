@@ -3,4 +3,4 @@
 Citing pyLGN
 ============
 
- * `Hobbi Mobarhan, Milad (2016). A firing-rate based simulation tool for studying roles of cortical feedback in lateral geniculate nucleus (LGN). <http://www.abstractsonline.com/pp8/#!/4071/presentation/5575>`_
+ * `Hobbi Mobarhan, Milad (2018). Firing-rate based network modeling of the dLGN circuit: Effects of cortical feedback on spatiotemporal response properties of relay cells. <https://doi.org/10.1371/journal.pcbi.1006156>`_

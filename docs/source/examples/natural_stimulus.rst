@@ -22,7 +22,7 @@ Natural movies can be given as GIFs:
 
 .. code-block:: python
 
-          stimulus = pylgn.stimulus.create_natural_movie(filename="natural_scene.gif")
+          stimulus = pylgn.stimulus.create_natural_movie(filenames="natural_scene.gif")
 
 .. note::
     If GIF file do not have a "duration" key (time between frames) 30 ms is used by default. See `Pillow documentation <http://pillow.readthedocs.io/en/3.1.x/handbook/image-file-formats.html>`_ for details.

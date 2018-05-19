@@ -3,8 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import pylgn
-import pylgn.kernels.spatial as spl
-import pylgn.kernels.temporal as tpl
+import pylgn.kernels as kernel
 
 # fb weights:
 fb_weights = [0, -1.5]
@@ -21,10 +20,10 @@ for j, w_c in enumerate(fb_weights):
     integrator = network.create_integrator(nt=1, nr=7, dt=1*pq.ms, dr=0.1*pq.deg)
 
     # create kernels
-    delta_t = tpl.create_delta_ft()
-    delta_s = spl.create_delta_ft()
-    Wg_r = spl.create_dog_ft(A=1, a=0.25*pq.deg, B=0.85, b=0.83*pq.deg)
-    Krc_r = spl.create_gauss_ft(A=1, a=0.83*pq.deg)
+    delta_t = kernel.temporal.create_delta_ft()
+    delta_s = kernel.spatial.create_delta_ft()
+    Wg_r = kernel.spatial.create_dog_ft(A=1, a=0.25*pq.deg, B=0.85, b=0.83*pq.deg)
+    Krc_r = kernel.spatial.create_gauss_ft(A=1, a=0.83*pq.deg)
 
     # create neurons
     ganglion = network.create_ganglion_cell(kernel=(Wg_r, delta_t))

@@ -6,13 +6,17 @@ Kernels
 
 Create kernels
 ---------------
- New kernels can be made and used as closures:
- 
- .. code-block:: python
+New kernels can be defined by creating a closure object where the inner function takes
+the spatial and/or temporal frequencies as argument, depending on whether it is a spatial,
+temporal, or spatiotemporal kernel.
+
+An example is shown below:
+
+  .. code-block:: python
 
        def create_my_kernel():
            def evaluate(w, kx, ky):
-               # implementation 
+               # implementation
            return evaluate
 
 
@@ -26,17 +30,17 @@ Spatial
 * Dirac delta
 
 .. automodule:: pylgn.kernels.spatial
-   :members: 
+   :members:
    :undoc-members:
 
 
 Temporal
 ''''''''
 * Dirac delta
-* Biphasic 
+* Biphasic
 * Difference of exponentials
 
 
 .. automodule:: pylgn.kernels.temporal
-   :members: 
+   :members:
    :undoc-members:

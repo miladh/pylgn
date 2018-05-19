@@ -135,9 +135,9 @@ If a separable kernel is used a tuple consisting of the spatial and temporal par
 
 Create stimulus
 '''''''''''''''
-A full-field grating stimulus has several parameters including angular frequency, spatial frequency, and orientation.
-If you want to use the analytical expression for the Fourier transform of the grating stimulus, you have to make sure that the chosen angular frequency and spatial frequencies exists in the temporal and spatial frequencies determined by the number of points and resolutions.
-In this example we just take some values from the existing values:
+A full-field grating stimulus has several parameters including :code:`angular_freq`, :code:`wavenumber`, and :code:`orient`.
+If you want to use the analytical expression for the Fourier transform of the grating stimulus, you have to make sure that the chosen frequencies exist in the :code:`integrator.spatial_angular_freqs` and :code:`integrator.temporal_angular_freqs` determined by the number of points and resolutions.
+In this example we use frequencies from these arrays:
 
 
 .. testcode::

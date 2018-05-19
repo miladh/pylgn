@@ -2,7 +2,7 @@
 
 Extended DoG model with cortical feedback
 =========================================
-In this example figure 6 in `Einevoll et al. (2012) <http://link.springer.com/article/10.1007/s11571-011-9183-8>`_ is reproduced, where the response of the extended difference of Gaussians (eDoG) model to flashing-spot is calculated. The resulting figure is shown below:
+In this example figure 6 in `Einevoll et al. (2012) <http://link.springer.com/article/10.1007/s11571-011-9183-8>`_ is reproduced, where the response of the extended difference-of-Gaussians (eDoG) model to flashing-spot is calculated. The resulting figure is shown below:
 
 .. figure:: ../../images/einevoll_2012_a.png
    :scale: 80 %

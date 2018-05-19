@@ -21,36 +21,38 @@ pyLGN is a visual stimulus-driven simulator of spatiotemporal cell responses in 
 ### Example
 In this example a natural image is used as stimulus to stimulate a layer of (ON-center) ganglion cells. The static image is shown in 80 ms after a 40 ms delay, and the response of the ganglion cells is shown as a heatmap from blue to red (low to high response).
 
-      import pylgn
-      import pylgn.kernels as kernel
-      import quantities as pq
+```python
+import pylgn
+import pylgn.kernels as kernel
+import quantities as pq
 
-      # create network
-      network = pylgn.Network()
+# create network
+network = pylgn.Network()
 
-      # create integrator
-      integrator = network.create_integrator(nt=8, nr=9, dt=1*pq.ms, dr=0.1*pq.deg)
+# create integrator
+integrator = network.create_integrator(nt=8, nr=9, dt=1*pq.ms, dr=0.1*pq.deg)
 
-      # create kernels
-      Wg_r = kernel.spatial.create_dog_ft()
-      Wg_t = kernel.temporal.create_biphasic_ft()
+# create kernels
+Wg_r = kernel.spatial.create_dog_ft()
+Wg_t = kernel.temporal.create_biphasic_ft()
 
-      # create neurons
-      ganglion = network.create_ganglion_cell(kernel=(Wg_r, Wg_t))
+# create neurons
+ganglion = network.create_ganglion_cell(kernel=(Wg_r, Wg_t))
 
-      # create stimulus
-      stimulus = pylgn.stimulus.create_natural_image(filenames="natural_scene.png",
-                                                     delay=40*pq.ms,
-                                                     duration=80*pq.ms)
-      network.set_stimulus(stimulus, compute_fft=True)
+# create stimulus
+stimulus = pylgn.stimulus.create_natural_image(filenames="natural_scene.png",
+                                               delay=40*pq.ms,
+                                               duration=80*pq.ms)
+network.set_stimulus(stimulus, compute_fft=True)
 
-      # compute
-      network.compute_response(ganglion)
+# compute
+network.compute_response(ganglion)
 
-      # visulize
-      pylgn.plot.animate_cube(ganglion.response,
-                              title="Ganglion cell responses",
-                              dt=integrator.dt.rescale("ms"))
+# visulize
+pylgn.plot.animate_cube(ganglion.response,
+                        title="Ganglion cell responses",
+                        dt=integrator.dt.rescale("ms"))
+```
 
 The resulting response is shown below:
 <p align="center">

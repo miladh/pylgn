@@ -12,47 +12,11 @@ pyLGN is a visual stimulus-driven simulator of spatiotemporal cell responses in 
 
 ### Table of contents
 
+- [Example](#example)
 - [Documentation](#documentation)
 - [Installation](#installation)
 - [Dependencies](#dependencies)
-- [Example](#example)
 - [Citation](#citation)
-
-### Documentation 
-- The documentation for pyLGN can be found at http://pylgn.rtfd.io/.
-
-- Scientific paper: [Mobarhan MH, Halnes G, Martínez-Cañada P, Hafting T, Fyhn M, Einevoll G. (2018). PLOS Computational Biology 14(5): e1006156. https://doi.org/10.1371/journal.pcbi.1006156](https://doi.org/10.1371/journal.pcbi.1006156)
-
-
-### Installation
-
-pyLGN can easily be installed using [conda](https://www.anaconda.com/download/):
-
-    conda install -c defaults -c conda-forge -c cinpla pylgn
-
-To install a specific version use:
-
-    conda install -c defaults -c conda-forge -c cinpla pylgn=0.91
-
-pyLGN can also be installed by cloning the Github repository:
-
-    $ git clone https://github.com/miladh/pylgn
-    $ cd /path/to/pylgn
-    $ python setup.py install
-
-Note that [dependencies](#dependencies) must be installed independently. 
-
-### Dependencies
-
-pyLGN has the following dependencies:
-
-- `python >=3.5`
-- `matplotlib`
-- `numpy`
-- `scipy`
-- `setuptools`
-- `pillow`
-- `quantities 0.12.1`
 
 ### Example
 In this example a natural image is used as stimulus to stimulate a layer of (ON-center) ganglion cells. The static image is shown in 80 ms after a 40 ms delay, and the response of the ganglion cells is shown as a heatmap from blue to red (low to high response).
@@ -92,6 +56,43 @@ The resulting response is shown below:
 <p align="center">
   <img width="384" height="288" src="https://github.com/miladh/pylgn/blob/dev/docs/images/natural_scene.gif">
 </p>
+
+
+### Documentation 
+- The documentation for pyLGN can be found at http://pylgn.rtfd.io/.
+
+- Scientific paper: [Mobarhan MH, Halnes G, Martínez-Cañada P, Hafting T, Fyhn M, Einevoll G. (2018). PLOS Computational Biology 14(5): e1006156. https://doi.org/10.1371/journal.pcbi.1006156](https://doi.org/10.1371/journal.pcbi.1006156)
+
+
+### Installation
+
+pyLGN can easily be installed using [conda](https://www.anaconda.com/download/):
+
+    conda install -c defaults -c conda-forge -c cinpla pylgn
+
+To install a specific version use:
+
+    conda install -c defaults -c conda-forge -c cinpla pylgn=0.91
+
+pyLGN can also be installed by cloning the Github repository:
+
+    $ git clone https://github.com/miladh/pylgn
+    $ cd /path/to/pylgn
+    $ python setup.py install
+
+Note that [dependencies](#dependencies) must be installed independently. 
+
+### Dependencies
+
+pyLGN has the following dependencies:
+
+- `python >=3.5`
+- `matplotlib`
+- `numpy`
+- `scipy`
+- `setuptools`
+- `pillow`
+- `quantities 0.12.1`
 
 ### Citation
 If you use pyLGN in your work, please cite:

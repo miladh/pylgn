@@ -97,7 +97,7 @@ Cells can be added to the network using :code:`create_<name>_cell()` method:
 .. note::
     The impulse-response function of ganglion cells can be set in two ways:
 
-    * It can either be given as an argument :code:`kernel` when the neuron object is created using :py:meth:`~pylgn.core.Network.create_ganglion_cell`. If no argument is given, a spatial DoG function and a temporal delta function is used.
+    * It can either be given as an argument :code:`kernel` when the neuron object is created using :py:meth:`~pylgn.core.Network.create_ganglion_cell`. If no argument is given, a spatial DoG function and a temporal biphasic function is used.
 
     * The second option is to use the :py:meth:`~pylgn.core.Ganglion.set_kernel` method after that the neuron object is created.
 

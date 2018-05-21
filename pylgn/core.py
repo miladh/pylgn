@@ -738,12 +738,12 @@ class Ganglion(Neuron):
             Dictionary with various annotations.
         """
         from .kernels.spatial import create_dog_ft
-        from .kernels.temporal import create_delta_ft
+        from .kernels.temporal import create_biphasic_ft
 
         super().__init__(background_response, annotations)
 
         if kernel is None:
-            kernel = (create_dog_ft(), create_delta_ft())
+            kernel = (create_dog_ft(), create_biphasic_ft())
         self.set_kernel(kernel)
 
     def _check_if_connection_is_allowed(self, neuron):

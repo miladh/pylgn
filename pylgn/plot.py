@@ -58,7 +58,7 @@ def animate_cube(cube, title=None, dt=None,
     def animate(j):
         im.set_data(cube[j, :, :])
         ttl.set_text("Frame = " + str(j)) if dt is None \
-            else ttl.set_text("Time = {} {}".format(round(j*dt.magnitude, 2), 
+            else ttl.set_text("Time = {} {}".format(round(j*dt.magnitude, 2),
                                                     dt.dimensionality))
         return im, ttl
 
@@ -79,8 +79,10 @@ def animate_cube(cube, title=None, dt=None,
         anim.save(filename, writer=writer)
     plt.show()
 
+    return anim
 
-def animate_spike_activity(data, times, positions, title=None, 
+
+def animate_spike_activity(data, times, positions, title=None,
                            marker="o", marker_size=10, marker_color="C0",
                            save_anim=False, filename="anim.mp4", writer="ffmpeg"):
 
@@ -93,11 +95,11 @@ def animate_spike_activity(data, times, positions, title=None,
         input array (Nx x Ny x N_spikes)
 
     times : quantity array
-    
+
     positions : quantity array
-    
+
     title : str, optional
-    
+
     marker : MarkerStyle, optional, default: 'o'
         marker style
 
@@ -121,7 +123,7 @@ def animate_spike_activity(data, times, positions, title=None,
 
     Nx, Ny = data.shape
     cube = np.zeros([times.shape[0], Nx, Ny])
-    
+
     x, y = np.meshgrid(positions, positions)
     dt = times[1] - times[0]
 
@@ -138,12 +140,12 @@ def animate_spike_activity(data, times, positions, title=None,
 
     def animate(j):
         scat.set_sizes(cube[j, :, :].flatten())
-        ttl.set_text("Time = {} {}".format(round(j*dt.magnitude, 2), 
+        ttl.set_text("Time = {} {}".format(round(j*dt.magnitude, 2),
                                            dt.dimensionality))
         return scat, ttl
-    
+
     ttl = plt.suptitle("")
-    scat = plt.scatter(x=x, y=y, s=cube[0, :, :], 
+    scat = plt.scatter(x=x, y=y, s=cube[0, :, :],
                        marker=marker, c=marker_color)
 
     anim = animation.FuncAnimation(fig, animate, init_func=init,
@@ -153,3 +155,5 @@ def animate_spike_activity(data, times, positions, title=None,
     if save_anim:
         anim.save(filename, writer=writer)
     plt.show()
+
+    return anim

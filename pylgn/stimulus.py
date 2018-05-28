@@ -1,10 +1,16 @@
-from abc import ABC, abstractmethod
+import sys
+import abc
+from abc import abstractmethod
 import numpy as np
 import quantities as pq
 import warnings
 
 from .helper import epsilon, heaviside, kronecker_delta, first_kind_bessel
 
+if sys.version_info >= (3, 4):
+    ABC = abc.ABC
+else:
+    ABC = abc.ABCMeta('ABC', (), {})
 
 def _check_valid_orient(orient):
     orient = orient.rescale(pq.deg) if isinstance(orient, pq.Quantity) else orient * pq.deg

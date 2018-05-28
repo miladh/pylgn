@@ -1,0 +1,9 @@
+#pip requirements file
+matplotlib
+numpy
+scipy
+setuptools
+pillow
+quantities>=0.12.1
+funcsigs; python_version < '3.4'
+qualname; python_version < '3.4'

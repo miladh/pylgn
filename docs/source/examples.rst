@@ -20,3 +20,4 @@ Natural scenes
     :maxdepth: 1
 
     examples/natural_stimulus
+    examples/generate_spiketrain

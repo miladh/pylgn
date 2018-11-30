@@ -33,6 +33,7 @@ Examples
   * :ref:`einevoll_2012`.
 
   * :ref:`natural_stimulus`.
+  * :ref:`generate_spiketrain`.
 
 
 

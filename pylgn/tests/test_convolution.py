@@ -5,6 +5,8 @@ import pylgn
 import pylgn.kernels as kernel
 import pylgn.kernels.spatial as spl
 import pylgn.kernels.temporal as tpl
+from .helper import (create_temporal_delta, create_biphasic,
+                     create_spatial_delta, create_gauss)
 
 
 def test_delta_delta():
@@ -23,7 +25,7 @@ def test_delta_delta():
     K_ft = tpl.create_delta_ft(delay_K)(w_vec) * spl.create_delta_ft(shift_y=shift_y)(kx_vec, ky_vec)
     G = integrator.compute_inverse_fft(W_ft * K_ft)
 
-    F = tpl.create_delta(1, delay_W)(t_vec-delay_K) * spl.create_delta(1, shift_x=shift_x)(x_vec, y_vec-shift_y)
+    F = create_temporal_delta(1, delay_W)(t_vec-delay_K) * create_spatial_delta(1, shift_x=shift_x)(x_vec, y_vec-shift_y)
 
     assert (abs(G - F) < complex(1e-12, 1e-12)).all()
 
@@ -48,9 +50,9 @@ def test_biphasic_delta():
     K_ft = tpl.create_delta_ft(delay_K)(w_vec) * spl.create_delta_ft(shift_y=shift_y)(kx_vec, ky_vec)
     G = integrator.compute_inverse_fft(W_ft * K_ft)
 
-    F = tpl.create_biphasic(phase=phase,
-                            damping=damping,
-                            delay=delay_W)(t_vec-delay_K) * spl.create_delta(1, shift_x=shift_x)(x_vec, y_vec-shift_y)
+    F = create_biphasic(phase=phase,
+                        damping=damping,
+                        delay=delay_W)(t_vec-delay_K) * create_spatial_delta(1, shift_x=shift_x)(x_vec, y_vec-shift_y)
 
     assert (abs(G - F) < complex(1e-3, 1e-12)).all()
 
@@ -74,6 +76,6 @@ def test_gauss_delta():
                                                                               ky_vec)
     G = integrator.compute_inverse_fft(W_ft * K_ft)
 
-    F = tpl.create_delta(1./integrator.dt, delay_W)(t_vec-delay_K) * spl.create_gauss(a=0.62*pq.deg)(x_vec-shift_x, y_vec-shift_y)
+    F = create_temporal_delta(1./integrator.dt, delay_W)(t_vec-delay_K) * create_gauss(a=0.62*pq.deg)(x_vec-shift_x, y_vec-shift_y)
 
     assert (abs(G - F.magnitude) < complex(1e-10, 1e-12)).all()

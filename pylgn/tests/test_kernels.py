@@ -3,6 +3,8 @@ import pytest
 import pylgn
 import pylgn.kernels.spatial as spl
 import pylgn.kernels.temporal as tpl
+from .helper import (create_dog, create_gauss, create_spatial_delta,
+                     create_temporal_delta, create_exp_decay, create_biphasic)
 
 
 ##############################################################
@@ -19,7 +21,7 @@ def test_non_separable_kernel():
 # spatial
 ##############################################################
 def test_spl_dog():
-    dog = spl.create_dog(A=1.0, a=0.25, B=0.85, b=0.83, dx=0, dy=0)
+    dog = create_dog(A=1.0, a=0.25, B=0.85, b=0.83, dx=0, dy=0)
     assert abs(dog(x=0.5, y=0.1)--0.189791527743) < 1e-12
     assert abs(dog(x=1.2, y=1.9)--0.00025733892027) < 1e-12
 
@@ -31,7 +33,7 @@ def test_spl_dog_ft():
 
 
 def test_spl_gauss():
-    gauss = spl.create_gauss(A=1, a=0.25, dx=0, dy=0)
+    gauss = create_gauss(A=1, a=0.25, dx=0, dy=0)
     assert abs(gauss(x=0.5, y=0.1)-0.079488639761866486) < 1e-12
     assert(gauss(x=1.2, y=1.9) < 1e-12)
 
@@ -43,16 +45,16 @@ def test_spl_gauss_ft():
 
 
 def test_spl_delta():
-    delta = spl.create_delta(1., 0, 0)
+    delta = create_spatial_delta(1., 0, 0)
     assert(delta(x=0, y=0) == 1)
 
-    delta = spl.create_delta(2.3, 2.1, 3.4)
+    delta = create_spatial_delta(2.3, 2.1, 3.4)
     assert(delta(x=2.1, y=3.4) == 2.3)
 
-    delta = spl.create_delta(-4.3, 1.456, 0)
+    delta = create_spatial_delta(-4.3, 1.456, 0)
     assert(delta(x=0, y=10.345) == 0)
 
-    delta = spl.create_delta(-4.3, 0, 1.456)
+    delta = create_spatial_delta(-4.3, 0, 1.456)
     assert(delta(x=0, y=1.456) == -4.3)
 
 
@@ -70,7 +72,7 @@ def test_create_exp_decay():
     tau = 0.25
     delay = 0.0
 
-    exp_decay = tpl.create_exp_decay(tau, delay)
+    exp_decay = create_exp_decay(tau, delay)
     assert abs(exp_decay(-10.24) - 0) < 1e-12
     assert abs(exp_decay(0.0) - 4.0) < 1e-12
     assert abs(exp_decay(1.1) - 0.049109359612273744) < 1e-12
@@ -81,7 +83,7 @@ def test_create_exp_decay():
     tau = 2.3
     delay = 1.0056
 
-    exp_decay = tpl.create_exp_decay(tau, delay)
+    exp_decay = create_exp_decay(tau, delay)
 
     assert abs(exp_decay(-10.24) - 0.) < 1e-12
     assert abs(exp_decay(0.0) - 0) < 1e-12
@@ -120,7 +122,7 @@ def test_tpl_biphasic():
     damping = 0.38
     delay = 0.0
 
-    biphasic = tpl.create_biphasic(duration, damping, delay)
+    biphasic = create_biphasic(duration, damping, delay)
 
     assert abs(biphasic(0.5) - 0.0369514993891) < 1e-12
     assert abs(biphasic(6.0) - 0.429120608773) < 1e-12
@@ -135,7 +137,7 @@ def test_tpl_biphasic():
     damping = 0.88
     delay = 44.5
 
-    biphasic = tpl.create_biphasic(duration, damping, delay)
+    biphasic = create_biphasic(duration, damping, delay)
     assert abs(biphasic(45) - 0.0761783767709) < 1e-12
     assert abs(biphasic(50.5) - 0.792579042689) < 1e-12
     assert abs(biphasic(56.0) - 0.983301195364) < 1e-12
@@ -175,13 +177,13 @@ def test_tpl_biphasic_ft():
 
 
 def test_tpl_delta():
-    delta = tpl.create_delta(peak=1.3, delay=0)
+    delta = create_temporal_delta(peak=1.3, delay=0)
     assert(delta(t=0) == 1.3)
 
-    delta = tpl.create_delta(peak=-21.3, delay=2.123)
+    delta = create_temporal_delta(peak=-21.3, delay=2.123)
     assert(delta(t=0) == 0)
 
-    delta = tpl.create_delta(peak=-21.3, delay=-10.02)
+    delta = create_temporal_delta(peak=-21.3, delay=-10.02)
     assert(delta(t=-10.02) == -21.3)
 
 

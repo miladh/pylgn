@@ -1,11 +1,20 @@
+import sys
 import numpy as np
-from abc import ABC, abstractmethod
+import abc
+from abc import abstractmethod
 from collections import defaultdict
 import quantities as pq
 
+if sys.version_info >= (3, 4):
+    ABC = abc.ABC
+else:
+    ABC = abc.ABCMeta('ABC', (), {})
 
 def _unpack_kernel_tuple(kernel):
-    from inspect import signature
+    if sys.version_info >= (3, 4):
+        from inspect import signature
+    else:
+        from funcsigs import signature
 
     if not isinstance(kernel, tuple):
         raise TypeError("kernel is not a tuple", type(kernel))
@@ -35,6 +44,11 @@ def closure_params(closure):
         Dictionary
 
     """
+    if sys.version_info >= (3, 4):
+        pass
+    else:        
+        from qualname import qualname
+
     attrs = {}
 
     for cell_name, cell in zip(closure.__code__.co_freevars,
@@ -44,10 +58,18 @@ def closure_params(closure):
             if "params" not in attrs:
                 attrs["params"] = {}
             attrs["params"][cell_name] = cell_contents
-            attrs["type"] = closure.__qualname__.split(".")[0]
+            if sys.version_info >= (3, 4):
+                attrs["type"] = closure.__qualname__.split(".")[0]
+            else:
+                attrs["type"] = qualname(closure).split(".")[0]
         else:
             attrs[cell_name] = closure_params(cell_contents)
-            attrs[cell_name]["type"] = cell_contents.__qualname__.split(".")[0]
+            if sys.version_info >= (3, 4):
+                attrs[cell_name]["type"] = cell_contents.__qualname__.split("."
+                                                                            )[0]
+            else:
+                attrs[cell_name]["type"] = qualname(cell_contents).split(".")[0]
+                
     return attrs
 
 
@@ -690,7 +712,7 @@ class DescriptiveNeuron(Neuron):
         annotations : dict
             Dictionary with various annotations.
         """
-        super().__init__(background_response, annotations)
+        Neuron.__init__(self, background_response, annotations)
         self.set_kernel(kernel)
 
     def _check_if_connection_is_allowed(self, neuron):
@@ -740,7 +762,7 @@ class Ganglion(Neuron):
         from .kernels.spatial import create_dog_ft
         from .kernels.temporal import create_biphasic_ft
 
-        super().__init__(background_response, annotations)
+        Neuron.__init__(self, background_response, annotations)
 
         if kernel is None:
             kernel = (create_dog_ft(), create_biphasic_ft())
@@ -788,7 +810,7 @@ class Relay(Neuron):
         annotations : dict
             Dictionary with various annotations.
         """
-        super().__init__(background_response, annotations)
+        Neuron.__init__(self, background_response, annotations)
 
     def _check_if_connection_is_allowed(self, neuron):
         if not isinstance(neuron, (Ganglion, Cortical)):
@@ -832,7 +854,7 @@ class Cortical(Neuron):
         annotations : dict
             Dictionary with various annotations.
         """
-        super().__init__(background_response, annotations)
+        Neuron.__init__(self, background_response, annotations)
 
     def evaluate_irf_ft(self, w, kx, ky):
         """

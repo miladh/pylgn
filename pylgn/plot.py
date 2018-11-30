@@ -19,6 +19,46 @@ class MidpointNormalize(colors.Normalize):
         return np.ma.masked_array(np.interp(value, x, y))
 
 
+def raster_plot(data, xlabel="Time", ylabel="Neuron",
+                orientation='horizontal', lineoffsets=1, linelengths=0.5,
+                linewidths=None, colors=None, linestyles="solid"):
+
+    """
+    Raster plot
+
+    Parameters
+    ----------
+    data : list or ndarray
+        list/array of spike trains for individual locations.
+        Each row corresponds to a location.
+
+    xlabel : str, optional
+
+    ylabel : str, optional
+
+    orientation : {'horizontal', 'vertical'}, optional
+
+    lineoffsets :  scalar or sequence of scalars, optional
+
+    linelengths : scalar or sequence of scalars, optional
+
+    linewidths : scalar, scalar sequence or None, optional
+
+    colors : color, sequence of colors or None, optional
+
+    linestyles : str or tuple or a sequence of such values, optional
+
+    """
+    fig, ax = plt.subplots()
+    ax.eventplot(np.array(data), colors=colors, lineoffsets=lineoffsets, linelengths=linelengths,
+                 orientation=orientation, linewidths=linewidths, linestyles=linestyles)
+    ax.set_ylabel(ylabel)
+    ax.set_xlabel(xlabel)
+    plt.show()
+
+    return fig, ax
+
+
 def animate_cube(cube, title=None, dt=None,
                  vmin=None, vmax=None, cmap="RdBu_r",
                  save_anim=False, filename="anim.mp4", writer="ffmpeg"):
